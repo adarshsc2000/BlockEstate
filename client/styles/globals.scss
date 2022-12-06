@@ -1,3 +1,11 @@
+$primary: #5f3841;
+
+$theme-colors: (
+  "primary": $primary,
+);
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
 html,
 body {
   padding: 0;

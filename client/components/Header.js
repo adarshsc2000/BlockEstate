@@ -2,7 +2,10 @@ import { ConnectButton } from 'web3uikit'
 
 function Header() {
   return (
-    <ConnectButton />
+    <div>
+      <h1 className="text-center text-primary">HIIII</h1>
+      <ConnectButton />
+    </div>
   )
 }
 
