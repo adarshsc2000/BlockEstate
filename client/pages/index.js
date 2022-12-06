@@ -11,7 +11,8 @@ export default function Home() {
         <meta name="description" content="A decentralized and modern blockchain application based on real estate" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />      
+      <Header/> 
+      Discover your new home      
     </div>
   );
 }
