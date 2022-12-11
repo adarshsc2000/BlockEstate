@@ -23,9 +23,9 @@ function Navigationbar(props) {
             <Navbar.Collapse id="responsive-navbar-nav">
               {/* <ConnectButton className="d-inline-block d-md-none" /> */}
 
-              <Nav className="me-auto">
+              {/* <Nav className="me-auto">
                 <Nav.Link href="/browse">Browse</Nav.Link>
-              </Nav>
+              </Nav> */}
               <Nav>
                 <Nav.Link href="/whitepaper">White Paper</Nav.Link>
                 <ConnectButton className="d-none d-md-block" />
