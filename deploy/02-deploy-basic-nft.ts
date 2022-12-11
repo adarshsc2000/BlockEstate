@@ -4,7 +4,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 const deployBasicNft: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    const { deployments, getNamedAccounts, network, ethers } = hre;
+    const { deployments, getNamedAccounts, network } = hre;
     const { deploy, log } = deployments;
     const { deployer } = await getNamedAccounts();
     const waitBlockConfirmations = !developmentChains.includes(network.name)
