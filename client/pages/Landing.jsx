@@ -4,7 +4,7 @@ export default function Landing() {
   return (
     <Container fluid>
       <br />
-      monfdfnsdfnsdlfs      fdfdfd<br />sdfdffffffffffffffffffff<br />ffffffffffffffffffff
+      thank you      fdfdfd<br />sdfdffffffffffffffffffff<br />ffffffffffffffffffff
     </Container>
   )
 }
