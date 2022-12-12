@@ -1,10 +1,13 @@
 import Container from "react-bootstrap/Container";
+import AnimatedTextCharacter from "../components/AnimatedTextCharacter.jsx";
 
 export default function Landing() {
   return (
     <Container fluid>
       <br />
-      thank you      fdfdfd<br />sdfdffffffffffffffffffff<br />ffffffffffffffffffff
+      <AnimatedTextCharacter text="Welcome to BlockEstate" />
     </Container>
   )
 }
+
+
