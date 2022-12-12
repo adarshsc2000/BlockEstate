@@ -46,12 +46,15 @@ function Navigationbar(props) {
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="ms-auto">
-                  <Nav.Link href="#link">My Properties</Nav.Link> {/* inside will be selling, bought */}
-                  <Nav.Link href="#link">In Process</Nav.Link> {/*  inside will be selling under process, buying */}
-                  <ConnectButton className="d-none d-md-block" />
-                </Nav>
-              </Navbar.Collapse>
+              <Nav>
+                <Nav.Link href="/browse">Browse</Nav.Link>
+              </Nav>
+              <Nav className="ms-auto">
+                <Nav.Link href="#link">My Properties</Nav.Link> {/* inside will be selling, bought */}
+                <Nav.Link href="#link">In Process</Nav.Link> {/*  inside will be selling under process, buying */}
+                <ConnectButton className="d-none d-md-block" />
+              </Nav>
+            </Navbar.Collapse>
           </Container>
         </Navbar>
 
@@ -66,14 +69,14 @@ function Navigationbar(props) {
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="me-auto">
-                  <Nav.Link href="#link">To Approve</Nav.Link>
-                  <Nav.Link href="#link">Approved</Nav.Link>
-                </Nav>
-                <Nav>
+              <Nav className="me-auto">
+                <Nav.Link href="#link">To Approve</Nav.Link>
+                <Nav.Link href="#link">Approved</Nav.Link>
+              </Nav>
+              <Nav>
                 <Nav.link href="#logout/login">Login/Logout</Nav.link>
-                </Nav>
-              </Navbar.Collapse>
+              </Nav>
+            </Navbar.Collapse>
           </Container>
         </Navbar>
       }

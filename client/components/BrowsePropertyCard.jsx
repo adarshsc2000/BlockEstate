@@ -8,6 +8,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { BiBed, BiBath } from "react-icons/bi"
 import { FiMessageCircle } from "react-icons/fi"
 import { RxDimensions } from "react-icons/rx"
+import Link from 'next/link'
 
 export default function BrowsePropertyCard(props) {
 
@@ -55,7 +56,9 @@ export default function BrowsePropertyCard(props) {
                       <div><RxDimensions /> {props.propertyArea} sqm</div>
                     </Stack>}
                 </Card.Text>
-                <Button variant="outline-primary" size="sm">More Information</Button>
+                <Link href={`/browse/${encodeURIComponent(props.property_id)}`} >
+                <Button variant="outline-primary"  size="sm">More Information</Button>
+                </Link>
               </div>
             </Stack>
           </Card.Body>
