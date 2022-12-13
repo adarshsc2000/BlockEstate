@@ -25,8 +25,8 @@ function Navigationbar(props) {
 
               {/* <Nav className="me-auto">
                 <Nav.Link href="/browse">Browse</Nav.Link>
-              </Nav> */}
-              <Nav>
+              </Nav> */} 
+              <Nav className='ms-auto'>
                 <Nav.Link href="/whitepaper">White Paper</Nav.Link>
                 <ConnectButton className="d-none d-md-block" />
               </Nav>

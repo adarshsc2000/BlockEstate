@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Navigationbar from "../../components/Navigationbar.jsx";
 import Meta from "../../components/Meta.jsx"
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import { Container } from "react-bootstrap";
-import { Row, Col } from "react-bootstrap";
 import Stack from 'react-bootstrap/Stack';
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { BiBed, BiBath } from "react-icons/bi"
-import { FiMessageCircle } from "react-icons/fi"
-import { RxDimensions } from "react-icons/rx"
 import BrowsePropertyCard from "../../components/BrowsePropertyCard.jsx";
 import properties from '../../properties.js'
 
