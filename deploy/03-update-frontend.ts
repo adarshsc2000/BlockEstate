@@ -23,28 +23,28 @@ const updateFrontEnd: DeployFunction = async function() {
 
 async function updateContractAddresses() {
     const chainId = network.config.chainId!.toString();
-    const realEstate = await ethers.getContract("RealEstate");
+    const blockEstate = await ethers.getContract("BlockEstate");
     const contractAddresses = JSON.parse(fs.readFileSync(frontEndContractsFile, "utf8"));
     if (chainId in contractAddresses) {
-        if (!contractAddresses[chainId]["RealEstate"].includes(realEstate.address)) {
-            contractAddresses[chainId]["RealEstate"].push(realEstate.address);
+        if (!contractAddresses[chainId]["BlockEstate"].includes(blockEstate.address)) {
+            contractAddresses[chainId]["BlockEstate"].push(blockEstate.address);
         }
     } else {
-        contractAddresses[chainId] = { RealEstate: [realEstate.address] };
+        contractAddresses[chainId] = { BlockEstate: [blockEstate.address] };
     }
     fs.writeFileSync(frontEndContractsFile, JSON.stringify(contractAddresses));
     fs.writeFileSync(frontEndContractsFile2, JSON.stringify(contractAddresses));
 }
 
 async function updateAbi() {
-    const realEstate = await ethers.getContract("RealEstate");
+    const blockEstate = await ethers.getContract("BlockEstate");
     fs.writeFileSync(
-        `${frontEndAbiLocation}RealEstateAbi.json`,
-        realEstate.interface.format(ethers.utils.FormatTypes.json).toString()
+        `${frontEndAbiLocation}BlockEstateAbi.json`,
+        blockEstate.interface.format(ethers.utils.FormatTypes.json).toString()
     );
     fs.writeFileSync(
-        `${frontEndAbiLocation2}RealEstateAbi.json`,
-        realEstate.interface.format(ethers.utils.FormatTypes.json).toString()
+        `${frontEndAbiLocation2}BlockEstateAbi.json`,
+        blockEstate.interface.format(ethers.utils.FormatTypes.json).toString()
     );
 
     const basicNft = await ethers.getContract("BasicNft");

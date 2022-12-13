@@ -5,7 +5,7 @@ import verify from "../utils/verify";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-const deployRealEstate: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployBlockEstate: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre;
     const { deploy, log } = deployments;
     const { deployer } = await getNamedAccounts();
@@ -21,7 +21,7 @@ const deployRealEstate: DeployFunction = async function (hre: HardhatRuntimeEnvi
     const args: any[] = [];
 
     // Deploying Contract
-    const realestate = await deploy("RealEstate", {
+    const blockEstate = await deploy("BlockEstate", {
         from: deployer,
         args: args,
         log: true,
@@ -31,12 +31,12 @@ const deployRealEstate: DeployFunction = async function (hre: HardhatRuntimeEnvi
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying...");
-        await verify(realestate.address, args);
+        await verify(blockEstate.address, args);
     }
     log(
         "\n*****************************************************************************************************************************"
     );
 };
 
-export default deployRealEstate;
-deployRealEstate.tags = ["all", "realestate"];
+export default deployBlockEstate;
+deployBlockEstate.tags = ["all", "blockestate"];

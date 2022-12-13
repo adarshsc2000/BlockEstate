@@ -1,0 +1,29 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: BlockEstate
+    network: goerli
+    source:
+      address: "0x41B3abB28D76695D5e9ea1D99AB5FE5f5240eaF9"
+      abi: BlockEstate
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PropertyBought
+        - PropertyCanceled
+        - PropertyListed
+      abis:
+        - name: BlockEstate
+          file: ./abis/BlockEstate.json
+      eventHandlers:
+        - event: PropertyBought(indexed address,indexed address,indexed uint256,uint256)
+          handler: handlePropertyBought
+        - event: PropertyCanceled(indexed address,indexed address,indexed uint256)
+          handler: handlePropertyCanceled
+        - event: PropertyListed(indexed address,indexed address,indexed uint256,uint256)
+          handler: handlePropertyListed
+      file: ./src/block-estate.ts

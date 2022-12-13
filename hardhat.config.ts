@@ -6,8 +6,9 @@ import "solidity-coverage";
 import "hardhat-deploy";
 import "dotenv/config";
 
-const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
@@ -43,13 +44,13 @@ const config: HardhatUserConfig = {
         //     chainId: 137,
         // },
     },
-    // etherscan: {
-    //     // npx hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
-    //     apiKey: {
-    //         goerli: ETHERSCAN_API_KEY,
-    //         polygon: POLYGONSCAN_API_KEY,
-    //     },
-    // },
+    etherscan: {
+        // npx hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
+        apiKey: {
+            goerli: ETHERSCAN_API_KEY,
+            // polygon: POLYGONSCAN_API_KEY,
+        },
+    },
     // gasReporter: {
     //     enabled: REPORT_GAS,
     //     currency: "USD",

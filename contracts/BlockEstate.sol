@@ -16,7 +16,7 @@ error PriceMustBeAboveZero();
 // Error thrown for isNotOwner modifier
 // error IsNotOwner()
 
-contract RealEstate is ReentrancyGuard {
+contract BlockEstate is ReentrancyGuard {
     struct Listing {
         uint256 price;
         address seller;
