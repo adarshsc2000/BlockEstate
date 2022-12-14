@@ -44,6 +44,8 @@ export function handlePropertyListed(event: PropertyListedEvent): void {
     propertyListed.price = event.params.price;
     activeProperty.price = event.params.price;
 
+    activeProperty.buyer = Address.fromString("0x0000000000000000000000000000000000000000")
+
     propertyListed.save();
     activeProperty.save();
 }
