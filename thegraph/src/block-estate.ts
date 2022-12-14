@@ -1,57 +1,102 @@
+import { BigInt, Address } from "@graphprotocol/graph-ts";
+
 import {
-  PropertyBought as PropertyBoughtEvent,
-  PropertyCanceled as PropertyCanceledEvent,
-  PropertyListed as PropertyListedEvent
-} from "../generated/BlockEstate/BlockEstate"
+    PropertyBought as PropertyBoughtEvent,
+    PropertyCanceled as PropertyCanceledEvent,
+    PropertyListed as PropertyListedEvent
+} from "../generated/BlockEstate/BlockEstate";
+
 import {
-  PropertyBought,
-  PropertyCanceled,
-  PropertyListed
-} from "../generated/schema"
+    PropertyListed,
+    ActiveProperty,
+    PropertyBought,
+    PropertyCanceled
+} from "../generated/schema";
+
+export function handlePropertyListed(event: PropertyListedEvent): void {
+    let propertyListed = PropertyListed.load(
+        getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+    );
+    let activeProperty = ActiveProperty.load(
+        getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+    );
+
+    if (!propertyListed) {
+        propertyListed = new PropertyListed(
+            getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+        );
+    }
+
+    if (!activeProperty) {
+        activeProperty = new ActiveProperty(
+            getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+        );
+    }
+    propertyListed.seller = event.params.seller;
+    activeProperty.seller = event.params.seller;
+
+    propertyListed.nftAddress = event.params.nftAddress;
+    activeProperty.nftAddress = event.params.nftAddress;
+
+    propertyListed.tokenId = event.params.tokenId;
+    activeProperty.tokenId = event.params.tokenId;
+
+    propertyListed.price = event.params.price;
+    activeProperty.price = event.params.price;
+
+    propertyListed.save();
+    activeProperty.save();
+}
 
 export function handlePropertyBought(event: PropertyBoughtEvent): void {
-  let entity = new PropertyBought(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.buyer = event.params.buyer
-  entity.nftAddress = event.params.nftAddress
-  entity.tokenId = event.params.tokenId
-  entity.price = event.params.price
+    let propertyBought = PropertyBought.load(
+        getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+    );
+    let activeProperty = ActiveProperty.load(
+        getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+    );
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+    if (!propertyBought) {
+        propertyBought = new PropertyBought(
+            getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+        );
+    }
+    propertyBought.buyer = event.params.buyer;
+    propertyBought.nftAddress = event.params.nftAddress;
+    propertyBought.tokenId = event.params.tokenId;
+    activeProperty!.buyer = event.params.buyer;
 
-  entity.save()
+    propertyBought.save();
+    activeProperty!.save();
+
+    // entity.blockNumber = event.block.number;
+    // entity.blockTimestamp = event.block.timestamp;
+    // entity.transactionHash = event.transaction.hash;
 }
 
 export function handlePropertyCanceled(event: PropertyCanceledEvent): void {
-  let entity = new PropertyCanceled(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.seller = event.params.seller
-  entity.nftAddress = event.params.nftAddress
-  entity.tokenId = event.params.tokenId
+    let propertyCanceled = PropertyCanceled.load(
+        getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+    );
+    let activeProperty = ActiveProperty.load(
+        getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+    );
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+    if (!propertyCanceled) {
+        propertyCanceled = new PropertyCanceled(
+            getIdFromEventParams(event.params.tokenId, event.params.nftAddress)
+        );
+    }
+    propertyCanceled.seller = event.params.seller;
+    propertyCanceled.nftAddress = event.params.nftAddress;
+    propertyCanceled.tokenId = event.params.tokenId;
+    // deadAddress
+    activeProperty!.buyer = Address.fromString("0x000000000000000000000000000000000000dEaD");
 
-  entity.save()
+    propertyCanceled.save();
+    activeProperty!.save();
 }
 
-export function handlePropertyListed(event: PropertyListedEvent): void {
-  let entity = new PropertyListed(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.seller = event.params.seller
-  entity.nftAddress = event.params.nftAddress
-  entity.tokenId = event.params.tokenId
-  entity.price = event.params.price
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+function getIdFromEventParams(tokenId: BigInt, nftAddress: Address): string {
+    return tokenId.toHexString() + nftAddress.toHexString();
 }
