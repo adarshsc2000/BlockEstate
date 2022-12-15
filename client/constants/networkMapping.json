@@ -1,1 +1,4 @@
-{ "5": { "BlockEstate": ["0x41B3abB28D76695D5e9ea1D99AB5FE5f5240eaF9"] } }
+{
+  "5": { "BlockEstate": ["0x41B3abB28D76695D5e9ea1D99AB5FE5f5240eaF9"] },
+  "31337": { "BlockEstate": ["0x5FbDB2315678afecb367f032d93F642f64180aa3"] }
+}
