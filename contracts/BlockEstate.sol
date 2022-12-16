@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
+// Import Statements
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
+// Custom Errors
 error PriceNotMet(address nftAddress, uint256 tokenId, uint256 price);
 error ItemNotForSale(address nftAddress, uint256 tokenId);
 error NotListed(address nftAddress, uint256 tokenId);
@@ -17,11 +19,13 @@ error PriceMustBeAboveZero();
 // error IsNotOwner()
 
 contract BlockEstate is ReentrancyGuard {
+    // Type Declarations //
     struct Listing {
         uint256 price;
         address seller;
     }
 
+    // Events //
     event PropertyListed(
         address indexed seller,
         address indexed nftAddress,
@@ -42,13 +46,15 @@ contract BlockEstate is ReentrancyGuard {
         uint256 price
     );
 
+    // State Variables //
+    address private immutable i_admin;
+    address private immutable i_notary;
+    address private immutable i_slrb;
     mapping(address => mapping(uint256 => Listing)) private s_listings;
     mapping(address => uint256) private s_proceeds;
 
-    modifier notListed(
-        address nftAddress,
-        uint256 tokenId
-    ) {
+    // Modifiers //
+    modifier notListed(address nftAddress, uint256 tokenId) {
         Listing memory listing = s_listings[nftAddress][tokenId];
         if (listing.price > 0) {
             revert AlreadyListed(nftAddress, tokenId);
@@ -77,26 +83,15 @@ contract BlockEstate is ReentrancyGuard {
         _;
     }
 
-    // IsNotOwner Modifier - Nft Owner can't buy his/her NFT
-    // Modifies buyItem function
-    // Owner should only list, cancel listing or update listing
-    /* modifier isNotOwner(
-        address nftAddress,
-        uint256 tokenId,
-        address spender
-    ) {
-        IERC721 nft = IERC721(nftAddress);
-        address owner = nft.ownerOf(tokenId);
-        if (spender == owner) {
-            revert IsNotOwner();
-        }
-        _;
-    } */
+    // Constructor //
+    constructor(address _notary, address _slrb) {
+        i_admin = msg.sender;
+        i_notary = _notary;
+        i_slrb = _slrb;
+    }
 
-    /////////////////////
     // Main Functions //
-    /////////////////////
-    /*
+    /**
      * @notice Method for listing NFT
      * @param nftAddress Address of NFT contract
      * @param tokenId Token ID of NFT
@@ -122,12 +117,15 @@ contract BlockEstate is ReentrancyGuard {
         emit PropertyListed(msg.sender, nftAddress, tokenId, price);
     }
 
-    /*
+    /**
      * @notice Method for cancelling listing
      * @param nftAddress Address of NFT contract
      * @param tokenId Token ID of NFT
      */
-    function cancelListing(address nftAddress, uint256 tokenId)
+    function cancelListing(
+        address nftAddress,
+        uint256 tokenId
+    )
         external
         isOwner(nftAddress, tokenId, msg.sender)
         isListed(nftAddress, tokenId)
@@ -136,7 +134,7 @@ contract BlockEstate is ReentrancyGuard {
         emit PropertyCanceled(msg.sender, nftAddress, tokenId);
     }
 
-    /*
+    /**
      * @notice Method for buying listing
      * @notice The owner of an NFT could unapprove the marketplace,
      * which would cause this function to fail
@@ -144,7 +142,10 @@ contract BlockEstate is ReentrancyGuard {
      * @param nftAddress Address of NFT contract
      * @param tokenId Token ID of NFT
      */
-    function buyItem(address nftAddress, uint256 tokenId)
+    function buyItem(
+        address nftAddress,
+        uint256 tokenId
+    )
         external
         payable
         isListed(nftAddress, tokenId)
@@ -163,11 +164,15 @@ contract BlockEstate is ReentrancyGuard {
         // Could just send the money...
         // https://fravoll.github.io/solidity-patterns/pull_over_push.html
         delete (s_listings[nftAddress][tokenId]);
-        IERC721(nftAddress).safeTransferFrom(listedItem.seller, msg.sender, tokenId);
+        IERC721(nftAddress).safeTransferFrom(
+            listedItem.seller,
+            msg.sender,
+            tokenId
+        );
         emit PropertyBought(msg.sender, nftAddress, tokenId, listedItem.price);
     }
 
-    /*
+    /**
      * @notice Method for updating listing
      * @param nftAddress Address of NFT contract
      * @param tokenId Token ID of NFT
@@ -191,8 +196,8 @@ contract BlockEstate is ReentrancyGuard {
         emit PropertyListed(msg.sender, nftAddress, tokenId, newPrice);
     }
 
-    /*
-     * @notice Method for withdrawing proceeds from sales
+    /**
+     * @dev Method for withdrawing proceeds from sales
      */
     function withdrawProceeds() external {
         uint256 proceeds = s_proceeds[msg.sender];
@@ -204,15 +209,23 @@ contract BlockEstate is ReentrancyGuard {
         require(success, "Transfer failed");
     }
 
-    /////////////////////
-    // Getter Functions //
-    /////////////////////
+    /**
+     * @dev Method to check if its a regular user that wants to buy / sell / view properties
+     */
+    function isRegularUser() public view returns (bool) {
+        address user = msg.sender;
+        if (user != i_admin && user != i_notary && user != i_slrb) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    function getListing(address nftAddress, uint256 tokenId)
-        external
-        view
-        returns (Listing memory)
-    {
+    // Getter Functions //
+    function getListing(
+        address nftAddress,
+        uint256 tokenId
+    ) external view returns (Listing memory) {
         return s_listings[nftAddress][tokenId];
     }
 

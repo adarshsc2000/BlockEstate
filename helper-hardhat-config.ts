@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 export interface networkConfigItem {
     name?: string;
     subscriptionId?: string;
@@ -39,6 +41,8 @@ export const networkConfig: networkConfigInfo = {
 
 export const developmentChains = ["hardhat", "localhost"];
 export const NUMBER_OF_BLOCK_CONFIRMATIONS = 6;
+export const NOTARY_WALLET_ADDRESS = process.env.NOTARY_WALLET_ADDRESS || "";
+export const SLRB_WALLET_ADDRESS = process.env.SLRB_WALLET_ADDRESS || "";
 
 export const frontEndContractsFile = "./client/constants/networkMapping.json";
 export const frontEndContractsFile2 = "./client/constants/networkMapping.json";
