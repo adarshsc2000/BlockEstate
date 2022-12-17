@@ -39,7 +39,6 @@
     "name": "approve",
     "constant": false,
     "payable": false,
-    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "to" },
       { "type": "uint256", "name": "tokenId" }
@@ -52,7 +51,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [{ "type": "address", "name": "owner" }],
     "outputs": [{ "type": "uint256" }]
   },
@@ -62,7 +60,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [{ "type": "uint256", "name": "tokenId" }],
     "outputs": [{ "type": "address" }]
   },
@@ -72,7 +69,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "owner" },
       { "type": "address", "name": "operator" }
@@ -84,7 +80,6 @@
     "name": "mintProperty",
     "constant": false,
     "payable": false,
-    "gas": 29000000,
     "inputs": [
       { "type": "string", "name": "tokenURI" },
       { "type": "address", "name": "owner" }
@@ -97,7 +92,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [],
     "outputs": [{ "type": "string" }]
   },
@@ -107,7 +101,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [{ "type": "uint256", "name": "tokenId" }],
     "outputs": [{ "type": "address" }]
   },
@@ -116,7 +109,6 @@
     "name": "safeTransferFrom",
     "constant": false,
     "payable": false,
-    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "from" },
       { "type": "address", "name": "to" },
@@ -129,7 +121,6 @@
     "name": "safeTransferFrom",
     "constant": false,
     "payable": false,
-    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "from" },
       { "type": "address", "name": "to" },
@@ -143,7 +134,6 @@
     "name": "setApprovalForAll",
     "constant": false,
     "payable": false,
-    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "operator" },
       { "type": "bool", "name": "approved" }
@@ -156,7 +146,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [{ "type": "bytes4", "name": "interfaceId" }],
     "outputs": [{ "type": "bool" }]
   },
@@ -166,7 +155,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [],
     "outputs": [{ "type": "string" }]
   },
@@ -176,7 +164,6 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "gas": 29000000,
     "inputs": [{ "type": "uint256", "name": "tokenId" }],
     "outputs": [{ "type": "string" }]
   },
@@ -185,7 +172,6 @@
     "name": "transferFrom",
     "constant": false,
     "payable": false,
-    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "from" },
       { "type": "address", "name": "to" },
