@@ -15,9 +15,6 @@ error NotOwner();
 error NotApprovedForMarketplace();
 error PriceMustBeAboveZero();
 
-// Error thrown for isNotOwner modifier
-// error IsNotOwner()
-
 contract BlockEstate is ReentrancyGuard {
     // Type Declarations //
     struct Listing {

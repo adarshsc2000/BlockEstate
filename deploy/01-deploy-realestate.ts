@@ -9,6 +9,7 @@ import verify from "../utils/verify";
 // Type declarations
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { verifyTypedData } from "ethers/lib/utils";
 
 const deployBlockEstate: DeployFunction = async function(
     hre: HardhatRuntimeEnvironment
@@ -24,14 +25,25 @@ const deployBlockEstate: DeployFunction = async function(
         "*****************************************************************************************************************************\n"
     );
 
-    // constructor Arguments
-    const args: any[] = developmentChains.includes(network.name) ? [notary, slrb] : 
-        [NOTARY_WALLET_ADDRESS, SLRB_WALLET_ADDRESS];
+    // Constructor Arguments for BlockEstate
+    const args: any[] = developmentChains.includes(network.name)
+        ? [notary, slrb]
+        : [NOTARY_WALLET_ADDRESS, SLRB_WALLET_ADDRESS];
 
-    // Deploying Contract
+    // Deploying BlockEstate Contract
     const blockEstate = await deploy("BlockEstate", {
         from: deployer,
         args: args,
+        log: true,
+        waitConfirmations: waitBlockConfirmations
+    });
+
+    const argsNFT: any[] = [blockEstate.address];
+
+    // Deploying PropertyNFT Contract
+    const propertyNFT = await deploy("PropertyNFT", {
+        from: deployer,
+        args: argsNFT,
         log: true,
         waitConfirmations: waitBlockConfirmations
     });
@@ -43,6 +55,7 @@ const deployBlockEstate: DeployFunction = async function(
     ) {
         log("Verifying...");
         await verify(blockEstate.address, args);
+        await verify(propertyNFT.address, argsNFT);
     }
     log(
         "\n*****************************************************************************************************************************"

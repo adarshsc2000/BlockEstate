@@ -47,4 +47,3 @@ export const SLRB_WALLET_ADDRESS = process.env.SLRB_WALLET_ADDRESS || "";
 export const frontEndContractsFile = "./client/constants/networkMapping.json";
 export const frontEndContractsFile2 = "./client/constants/networkMapping.json";
 export const frontEndAbiLocation = "./client/constants/";
-export const frontEndAbiLocation2 = "./client/constants/";

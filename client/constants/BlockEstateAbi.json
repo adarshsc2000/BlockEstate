@@ -74,6 +74,7 @@
     "constant": false,
     "stateMutability": "payable",
     "payable": true,
+    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "nftAddress" },
       { "type": "uint256", "name": "tokenId" }
@@ -85,6 +86,7 @@
     "name": "cancelListing",
     "constant": false,
     "payable": false,
+    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "nftAddress" },
       { "type": "uint256", "name": "tokenId" }
@@ -97,6 +99,7 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
+    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "nftAddress" },
       { "type": "uint256", "name": "tokenId" }
@@ -117,6 +120,7 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
+    "gas": 29000000,
     "inputs": [{ "type": "address", "name": "seller" }],
     "outputs": [{ "type": "uint256" }]
   },
@@ -126,6 +130,7 @@
     "constant": true,
     "stateMutability": "view",
     "payable": false,
+    "gas": 29000000,
     "inputs": [],
     "outputs": [{ "type": "bool" }]
   },
@@ -134,6 +139,7 @@
     "name": "listItem",
     "constant": false,
     "payable": false,
+    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "nftAddress" },
       { "type": "uint256", "name": "tokenId" },
@@ -146,6 +152,7 @@
     "name": "updateListing",
     "constant": false,
     "payable": false,
+    "gas": 29000000,
     "inputs": [
       { "type": "address", "name": "nftAddress" },
       { "type": "uint256", "name": "tokenId" },
@@ -158,6 +165,7 @@
     "name": "withdrawProceeds",
     "constant": false,
     "payable": false,
+    "gas": 29000000,
     "inputs": [],
     "outputs": []
   }

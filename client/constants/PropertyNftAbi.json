@@ -1,5 +1,9 @@
 [
-  { "type": "constructor", "payable": false, "inputs": [] },
+  {
+    "type": "constructor",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "blockEstateAddress" }]
+  },
   {
     "type": "event",
     "anonymous": false,
@@ -23,28 +27,12 @@
   {
     "type": "event",
     "anonymous": false,
-    "name": "DogMinted",
-    "inputs": [{ "type": "uint256", "name": "tokenId", "indexed": true }]
-  },
-  {
-    "type": "event",
-    "anonymous": false,
     "name": "Transfer",
     "inputs": [
       { "type": "address", "name": "from", "indexed": true },
       { "type": "address", "name": "to", "indexed": true },
       { "type": "uint256", "name": "tokenId", "indexed": true }
     ]
-  },
-  {
-    "type": "function",
-    "name": "TOKEN_URI",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "string" }]
   },
   {
     "type": "function",
@@ -80,16 +68,6 @@
   },
   {
     "type": "function",
-    "name": "getTokenCounter",
-    "constant": true,
-    "stateMutability": "view",
-    "payable": false,
-    "gas": 29000000,
-    "inputs": [],
-    "outputs": [{ "type": "uint256" }]
-  },
-  {
-    "type": "function",
     "name": "isApprovedForAll",
     "constant": true,
     "stateMutability": "view",
@@ -103,12 +81,15 @@
   },
   {
     "type": "function",
-    "name": "mintNft",
+    "name": "mintProperty",
     "constant": false,
     "payable": false,
     "gas": 29000000,
-    "inputs": [],
-    "outputs": []
+    "inputs": [
+      { "type": "string", "name": "tokenURI" },
+      { "type": "address", "name": "owner" }
+    ],
+    "outputs": [{ "type": "uint256" }]
   },
   {
     "type": "function",

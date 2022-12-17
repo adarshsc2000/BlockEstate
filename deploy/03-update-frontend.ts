@@ -1,8 +1,7 @@
 import {
     frontEndContractsFile,
     frontEndContractsFile2,
-    frontEndAbiLocation,
-    frontEndAbiLocation2
+    frontEndAbiLocation
 } from "../helper-hardhat-config";
 import "dotenv/config";
 import fs from "fs";
@@ -24,13 +23,24 @@ const updateFrontEnd: DeployFunction = async function() {
 async function updateContractAddresses() {
     const chainId = network.config.chainId!.toString();
     const blockEstate = await ethers.getContract("BlockEstate");
-    const contractAddresses = JSON.parse(fs.readFileSync(frontEndContractsFile, "utf8"));
+    const propertyNFT = await ethers.getContract("PropertyNFT");
+    const contractAddresses = JSON.parse(
+        fs.readFileSync(frontEndContractsFile, "utf8")
+    );
     if (chainId in contractAddresses) {
-        if (!contractAddresses[chainId]["BlockEstate"].includes(blockEstate.address)) {
-            contractAddresses[chainId]["BlockEstate"].push(blockEstate.address);
+        if (
+            !contractAddresses[chainId]["BlockEstate"].includes(
+                blockEstate.address
+            )
+        ) {
+            contractAddresses[chainId]["BlockEstate"] = blockEstate.address;
+            contractAddresses[chainId]["PropertyNFT"] = propertyNFT.address;
         }
     } else {
-        contractAddresses[chainId] = { BlockEstate: [blockEstate.address] };
+        contractAddresses[chainId] = {
+            BlockEstate: [blockEstate.address],
+            PropertyNFT: [propertyNFT.address],
+        };
     }
     fs.writeFileSync(frontEndContractsFile, JSON.stringify(contractAddresses));
     fs.writeFileSync(frontEndContractsFile2, JSON.stringify(contractAddresses));
@@ -42,18 +52,16 @@ async function updateAbi() {
         `${frontEndAbiLocation}BlockEstateAbi.json`,
         blockEstate.interface.format(ethers.utils.FormatTypes.json).toString()
     );
+
+    const propertyNFT = await ethers.getContract("PropertyNFT");
     fs.writeFileSync(
-        `${frontEndAbiLocation2}BlockEstateAbi.json`,
-        blockEstate.interface.format(ethers.utils.FormatTypes.json).toString()
+        `${frontEndAbiLocation}PropertyNftAbi.json`,
+        propertyNFT.interface.format(ethers.utils.FormatTypes.json).toString()
     );
 
     const basicNft = await ethers.getContract("BasicNft");
     fs.writeFileSync(
         `${frontEndAbiLocation}BasicNftAbi.json`,
-        basicNft.interface.format(ethers.utils.FormatTypes.json).toString()
-    );
-    fs.writeFileSync(
-        `${frontEndAbiLocation2}BasicNftAbi.json`,
         basicNft.interface.format(ethers.utils.FormatTypes.json).toString()
     );
 }
