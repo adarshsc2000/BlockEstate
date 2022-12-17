@@ -67,8 +67,8 @@ export default function browse(props) {
 
   return (
     <div>
-      <Navigationbar pageType={`${isConnectedToWallet == true ? `seller_buyer` : `landing`}`} />
       <Meta title="Browse properties" />
+      <Navigationbar />
       <br /> <br />
       <Container>
         <Stack gap={4}>

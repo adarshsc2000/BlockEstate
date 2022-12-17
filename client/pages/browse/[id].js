@@ -1,13 +1,7 @@
-import { useRouter } from "next/router"
+import { useRouter } from "next/router";
 export default function handler() {
-  const router = useRouter()
-  const { id } = router.query
+  const router = useRouter();
+  const { id } = router.query;
 
-  return (
-    <div>
-
-      post id : {id}
-
-    </div>
-  )
+  return <div>post id : {id}</div>;
 }

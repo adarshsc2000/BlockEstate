@@ -1,87 +1,70 @@
-import Meta from './Meta.jsx'
+import Meta from "./Meta.jsx";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-
 import { FaHome } from "react-icons/fa";
+import { ConnectButton } from "web3uikit";
+
+// imports for fetching backend
+import { useMoralis, useWeb3Contract } from "react-moralis";
+import BlockEstateAbi from "../constants/BlockEstateAbi.json";
+import networkMapping from "../constants/networkMapping.json";
+import { useState, useEffect } from "react";
 
 // import NavDropdown from "react-bootstrap/NavDropdown";
 
-import { ConnectButton } from "web3uikit";
+function Navigationbar() {
+  const { isWeb3Enabled, chainId, account } = useMoralis();
+  const chainString = chainId ? parseInt(chainId).toString() : "31337";
+  const { runContractFunction } = useWeb3Contract();
 
-function Navigationbar(props) {
+  const [regularUserFlag, setRegularUserFlag] = useState(false);
+
+  async function isRegularUser() {
+    if (isWeb3Enabled) {
+      runContractFunction({
+        params: {
+          abi: BlockEstateAbi,
+          contractAddress: networkMapping[chainString]["BlockEstate"][0],
+          functionName: "isRegularUser",
+          params: {},
+        },
+        onError: (error) => console.log(error),
+        onSuccess: (result) => setRegularUserFlag(result),
+      });
+    }
+  }
+
+  useEffect(() => {
+    isRegularUser();
+  }, [isWeb3Enabled, account]);
+
   return (
     <div>
       <Meta />
-      {props.pageType == 'landing' &&
-        <Navbar collapseOnSelect bg="primary" variant="dark" expand="md" fixed="top">
-          <Container>
-            <Navbar.Brand href="/">
-              <FaHome size={28} /> BlockEstate
-            </Navbar.Brand>
+      <Navbar collapseOnSelect bg="primary" variant="dark" expand="md" fixed="top">
+        <Container>
+          <Navbar.Brand href="/">
+            <FaHome size={28} /> BlockEstate
+          </Navbar.Brand>
+          <div className="d-flex justify-content-end">
+            <ConnectButton className="d-inline-block d-md-none" />
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              {/* <ConnectButton className="d-inline-block d-md-none" /> */}
-
-              {/* <Nav className="me-auto">
-                <Nav.Link href="/browse">Browse</Nav.Link>
-              </Nav> */}
-              <Nav className='ms-auto'>
-                <Nav.Link href="/whitepaper">White Paper</Nav.Link>
-                <ConnectButton className="d-none d-md-block" />
-              </Nav>
-
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      }
-
-      {
-        props.pageType == "seller_buyer" &&
-
-        <Navbar collapseOnSelect bg="primary" variant="dark" expand="md" fixed="top">
-          <Container >
-            <Navbar.Brand href="/">
-              <FaHome size={28} /> BlockEstate
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav>
-                <Nav.Link href="/browse">Browse</Nav.Link>
-              </Nav>
-              <Nav className="ms-auto">
-                <Nav.Link href="#link">My Properties</Nav.Link> {/* inside will be selling, bought */}
-                <Nav.Link href="#link">In Process</Nav.Link> {/*  inside will be selling under process, buying */}
-                <ConnectButton className="d-none d-md-block" />
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-
-      }
-
-      {
-        props.pageType == "notary" &&
-        <Navbar collapseOnSelect bg="primary" variant="dark" expand="md" fixed="top">
-          <Container >
-            <Navbar.Brand href="/">
-              <FaHome size={28} /> BlockEstate
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="#link">To Approve</Nav.Link>
-                <Nav.Link href="#link">Approved</Nav.Link>
-              </Nav>
-              <Nav>
-                <Nav.link href="#logout/login">Login/Logout</Nav.link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      }
-
-
+          </div>
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="ms-auto">
+              {regularUserFlag && (
+                <>
+                  <Nav.Link href="/browse">Browse</Nav.Link>
+                  <Nav.Link href="#">Profile</Nav.Link>
+                </>
+              )}
+              <Nav.Link href="/whitepaper">White Paper</Nav.Link>
+              <ConnectButton className="d-none d-md-block" />
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </div>
   );
 }
