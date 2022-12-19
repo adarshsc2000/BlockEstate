@@ -1,6 +1,6 @@
 // Import the NFTStorage class and File constructor from the 'nft.storage' package
 const { NFTStorage, File } = require("nft.storage");
-const { properties } = require("../constants/properties");
+const { getProperties } = require("../constants/properties");
 const fs = require("fs");
 const mime = require("mime");
 const path = require("path");
@@ -20,7 +20,7 @@ async function storeNFTs(imagesPath) {
     const fullImagesPath = path.resolve(imagesPath);
     const files = fs.readdirSync(fullImagesPath);
     let responses = [];
-    for(const property of properties) {
+    for(const property of await getProperties()) {
         for (fileIndex in files) {
             const image = await fileFromPath(
                 `${fullImagesPath}/${files[fileIndex]}`

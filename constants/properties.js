@@ -10,22 +10,17 @@ const path = require("path");
  * @param {string} filePath the path to a file to store
  * @returns {File} a File object containing the file content
  */
- async function fileFromPath(filePath) {
-  const content = await fs.promises.readFile(filePath);
-  const type = mime.getType(filePath);
-  return new File([content], path.basename(filePath), { type });
+async function fileFromPath(filePath) {
+    const content = await fs.promises.readFile(filePath);
+    const type = mime.getType(filePath);
+    return new File([content], path.basename(filePath), { type });
 }
-
-
-const title_deed = fileFromPath(
-    `${path.resolve("./assets/title_deed")}/title_deed_filler.pdf`
-);
 
 const properties = [
     {
         propertyID: 1,
-        titleDeed: title_deed,
-        images: ["pic1prop1.jpeg", "pic2prop1.jpeg", "pic3prop1.jpeg"],
+        titleDeed: "",
+        images: [],
         propertyType: "Apartment",
         priceInBhd: "400",
         location: "Abraj Al Lulu, Manama, Capital Governate",
@@ -37,8 +32,8 @@ const properties = [
     },
     {
         propertyID: 2,
-        titleDeed: title_deed,
-        images: ["pic4prop2.jpeg", "pic5prop2.jpeg", "pic6prop2.jpeg"],
+        titleDeed: "",
+        images: [],
         propertyType: "Villa",
         priceInBhd: "600",
         location: "in front of salmania, Manama, Capital Governate",
@@ -50,8 +45,8 @@ const properties = [
     },
     {
         propertyID: 3,
-        titleDeed: title_deed,
-        images: ["pic7prop3.jpeg", "pic8prop3.jpeg", "pic9prop3.jpeg"],
+        titleDeed: "",
+        images: [],
         propertyType: "Villa",
         priceInBhd: "600",
         location: "villa 2, Manama, Capital Governate",
@@ -63,8 +58,8 @@ const properties = [
     },
     {
         propertyID: 4,
-        titleDeed: title_deed,
-        images: ["pic10prop4.jpeg", "pic11prop4.jpeg", "pic12prop4.jpeg"],
+        titleDeed: "",
+        images: [],
         propertyType: "Apartment",
         priceInBhd: "200",
         location: "in front of salmania, Manama, Capital Governate",
@@ -76,8 +71,8 @@ const properties = [
     },
     {
         propertyID: 5,
-        titleDeed: title_deed,
-        images: ["pic13prop5.jpg", "pic14prop5.jpg", "pic15prop5.jpg"],
+        titleDeed: "",
+        images: [],
         propertyType: "Apartment",
         priceInBhd: "300",
         location: "in front of salmania, Manama, Capital Governate",
@@ -89,8 +84,8 @@ const properties = [
     },
     {
         propertyID: 6,
-        titleDeed: title_deed,
-        images: ["pic16prop6.jpeg", "pic17prop6.jpeg", "pic18prop6.jpeg"],
+        titleDeed: "",
+        images: [],
         propertyType: "Villa",
         priceInBhd: "500",
         location: "in front of salmania, Manama, Capital Governate",
@@ -102,6 +97,32 @@ const properties = [
     }
 ];
 
+async function getProperties() {
+    const title_deed = await fileFromPath(
+        `${path.resolve("./assets/title_deed")}/title_deed_filler.pdf`
+    );
+
+    const image1 = await fileFromPath(
+        `${path.resolve("./assets/images")}/property-image-1.jpg`
+    );
+
+    const image2 = await fileFromPath(
+        `${path.resolve("./assets/images")}/property-image-2.jpg`
+    );
+
+    const image3 = await fileFromPath(
+        `${path.resolve("./assets/images")}/property-image-3.jpg`
+    );
+
+    for (const property of properties) {
+      property['titleDeed'] = title_deed;
+      property['images'] = [image1, image2, image3];
+    }
+    return properties;
+}
+
+getProperties();
+
 module.exports = {
-    properties
+    getProperties
 };
