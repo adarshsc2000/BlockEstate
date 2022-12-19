@@ -6,7 +6,8 @@ import "solidity-coverage";
 import "hardhat-deploy";
 import "dotenv/config";
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY;
+const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY;
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 
@@ -18,19 +19,19 @@ const config: HardhatUserConfig = {
             // forking: {
             //   url: MAINNET_RPC_URL
             // }
-            chainId: 31337,
+            chainId: 31337
         },
         localhost: {
-            chainId: 31337,
+            chainId: 31337
         },
         goerli: {
             url: GOERLI_RPC_URL,
-            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
-            chainId: 5,
-        },
+            accounts: [ADMIN_PRIVATE_KEY!, USER_PRIVATE_KEY!],
+            chainId: 5
+        }
         // mainnet: {
         //     url: MAINNET_RPC_URL,
-        //     accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+        //     accounts: ADMIN_PRIVATE_KEY !== undefined ? [ADMIN_PRIVATE_KEY] : [],
         //     //   accounts: {
         //     //     mnemonic: MNEMONIC,
         //     //   },
@@ -39,7 +40,7 @@ const config: HardhatUserConfig = {
         // },
         // polygon: {
         //     url: POLYGON_MAINNET_RPC_URL,
-        //     accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+        //     accounts: ADMIN_PRIVATE_KEY !== undefined ? [ADMIN_PRIVATE_KEY] : [],
         //     saveDeployments: true,
         //     chainId: 137,
         // },
@@ -47,9 +48,9 @@ const config: HardhatUserConfig = {
     etherscan: {
         // npx hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
         apiKey: {
-            goerli: ETHERSCAN_API_KEY,
+            goerli: ETHERSCAN_API_KEY
             // polygon: POLYGONSCAN_API_KEY,
-        },
+        }
     },
     // gasReporter: {
     //     enabled: REPORT_GAS,
@@ -64,28 +65,29 @@ const config: HardhatUserConfig = {
     // },
     namedAccounts: {
         deployer: {
-            default: 0, // here this will by default take the first account as deployer
+            default: 0 // here this will by default take the first account as deployer
         },
         notary: {
-            default: 1,
+            default: 1
         },
         slrb: {
-            default: 2,
+            default: 2
         },
         user: {
             default: 3,
-        },
+            5: 1
+        }
     },
     solidity: {
         compilers: [
             {
-                version: "0.8.9",
-            },
-        ],
+                version: "0.8.9"
+            }
+        ]
     },
     mocha: {
-        timeout: 200000, // 200 seconds max for running tests
-    },
+        timeout: 200000 // 200 seconds max for running tests
+    }
 };
 
 export default config;

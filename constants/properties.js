@@ -20,7 +20,7 @@ const properties = [
     {
         propertyID: 1,
         titleDeed: "",
-        images: [],
+        propertyImages: [],
         propertyType: "Apartment",
         priceInBhd: "400",
         location: "Abraj Al Lulu, Manama, Capital Governate",
@@ -33,7 +33,7 @@ const properties = [
     {
         propertyID: 2,
         titleDeed: "",
-        images: [],
+        propertyImages: [],
         propertyType: "Villa",
         priceInBhd: "600",
         location: "in front of salmania, Manama, Capital Governate",
@@ -46,7 +46,7 @@ const properties = [
     {
         propertyID: 3,
         titleDeed: "",
-        images: [],
+        propertyImages: [],
         propertyType: "Villa",
         priceInBhd: "600",
         location: "villa 2, Manama, Capital Governate",
@@ -59,7 +59,7 @@ const properties = [
     {
         propertyID: 4,
         titleDeed: "",
-        images: [],
+        propertyImages: [],
         propertyType: "Apartment",
         priceInBhd: "200",
         location: "in front of salmania, Manama, Capital Governate",
@@ -72,7 +72,7 @@ const properties = [
     {
         propertyID: 5,
         titleDeed: "",
-        images: [],
+        propertyImages: [],
         propertyType: "Apartment",
         priceInBhd: "300",
         location: "in front of salmania, Manama, Capital Governate",
@@ -85,7 +85,7 @@ const properties = [
     {
         propertyID: 6,
         titleDeed: "",
-        images: [],
+        propertyImages: [],
         propertyType: "Villa",
         priceInBhd: "500",
         location: "in front of salmania, Manama, Capital Governate",
@@ -116,7 +116,7 @@ async function getProperties() {
 
     for (const property of properties) {
       property['titleDeed'] = title_deed;
-      property['images'] = [image1, image2, image3];
+      property['propertyImages'] = [image1, image2, image3];
     }
     return properties;
 }

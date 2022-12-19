@@ -5,7 +5,7 @@ const { storeNFTs } = require("../utils/uploadToNftStorage");
 async function mintProperty() {
     const { user } = await getNamedAccounts();
     const propertyNft = await ethers.getContract("PropertyNFT", user);
-    const responses = await storeNFTs("./assets/images");
+    const responses = await storeNFTs("./assets/blockestate-logo.png");
 
     for (const response of responses) {
         console.log("Minting NFT...");

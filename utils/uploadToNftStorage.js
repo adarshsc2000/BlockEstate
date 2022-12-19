@@ -17,23 +17,17 @@ const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY;
 async function storeNFTs(imagesPath) {
     const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
 
-    const fullImagesPath = path.resolve(imagesPath);
-    const files = fs.readdirSync(fullImagesPath);
     let responses = [];
-    for(const property of await getProperties()) {
-        for (fileIndex in files) {
-            const image = await fileFromPath(
-                `${fullImagesPath}/${files[fileIndex]}`
-            );
-            const propertyName = `Property ${property.propertyID}`;
-            const response = await nftstorage.store({
-                image,
-                name: propertyName,
-                description: `Sea view apartment with many....slice method used to trim the string to 11 chars, so 2 lines on md screen. otherwise img does not fit card`,
-                properties: property
-            });
-            responses.push(response);
-        }
+    for (const property of await getProperties()) {
+        const image = await fileFromPath(path.resolve(imagesPath));
+        const propertyName = `Property ${property.propertyID}`;
+        const response = await nftstorage.store({
+            image,
+            name: propertyName,
+            description: `The Apartment has free high-speed WIFI, fully equipped kitchen with dishwasher, TV with international channels, air-condition and a new modern interior combined with beautifully preserved old wooden floors. Comfortably sleeps 6 guests.`,
+            properties: property
+        });
+        responses.push(response);
     }
     return responses;
 }
