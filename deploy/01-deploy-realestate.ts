@@ -9,7 +9,6 @@ import verify from "../utils/verify";
 // Type declarations
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { verifyTypedData } from "ethers/lib/utils";
 
 const deployBlockEstate: DeployFunction = async function(
     hre: HardhatRuntimeEnvironment

@@ -1,7 +1,8 @@
 // Import the NFTStorage class and File constructor from the 'nft.storage' package
 const { NFTStorage, File } = require("nft.storage");
-const mime = require("mime");
+const { properties } = require("../constants/properties");
 const fs = require("fs");
+const mime = require("mime");
 const path = require("path");
 require("dotenv").config();
 
@@ -14,35 +15,25 @@ const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY;
  * @param {string} description a text description for the NFT
  */
 async function storeNFTs(imagesPath) {
+    const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+
     const fullImagesPath = path.resolve(imagesPath);
     const files = fs.readdirSync(fullImagesPath);
     let responses = [];
-    for (fileIndex in files) {
-        const title_deed = await fileFromPath(`${path.resolve("./assets/title_deed")}/title_deed_filler.pdf`)
-        const image = await fileFromPath(
-            `${fullImagesPath}/${files[fileIndex]}`
-        );
-        const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
-        const dogName = files[fileIndex].replace(".jpg", "");
-        const response = await nftstorage.store({
-            image,
-            name: dogName,
-            description: `Sea view apartment with many....slice method used to truim the string to 11 chars, so 2 lines on md screen. otherwise img does not fit card`,
-            properties: {
-                property_id: 1,
-                title_deed: title_deed,
-                images: ["pic1prop1.jpeg", "pic2prop1.jpeg", "pic3prop1.jpeg"],
-                propertyType: "Apartment",
-                priceInBhd: "400",
-                location: "Abraj Al Lulu, Manama, Capital Governate",
-                bedrooms: "8",
-                bathrooms: "8",
-                propertyArea: "736",
-                postDate: "5/12/2022",
-                phoneNumber: "97333344445"
-            }
-        });
-        responses.push(response);
+    for(const property of properties) {
+        for (fileIndex in files) {
+            const image = await fileFromPath(
+                `${fullImagesPath}/${files[fileIndex]}`
+            );
+            const propertyName = `Property ${property.propertyID}`;
+            const response = await nftstorage.store({
+                image,
+                name: propertyName,
+                description: `Sea view apartment with many....slice method used to trim the string to 11 chars, so 2 lines on md screen. otherwise img does not fit card`,
+                properties: property
+            });
+            responses.push(response);
+        }
     }
     return responses;
 }
