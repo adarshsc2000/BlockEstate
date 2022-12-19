@@ -6,9 +6,11 @@ import "solidity-coverage";
 import "hardhat-deploy";
 import "dotenv/config";
 
-const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY;
-const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY;
-const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
+const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY || "";
+const NOTARY_PRIVATE_KEY = process.env.NOTARY_PRIVATE_KEY || "";
+const SLRB_PRIVATE_KEY = process.env.SLRB_PRIVATE_KEY || "";
+const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY || "";
+const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 
 const config: HardhatUserConfig = {
@@ -26,7 +28,12 @@ const config: HardhatUserConfig = {
         },
         goerli: {
             url: GOERLI_RPC_URL,
-            accounts: [ADMIN_PRIVATE_KEY!, USER_PRIVATE_KEY!],
+            accounts: [
+                ADMIN_PRIVATE_KEY,
+                NOTARY_PRIVATE_KEY,
+                SLRB_PRIVATE_KEY,
+                USER_PRIVATE_KEY
+            ],
             chainId: 5
         }
         // mainnet: {
@@ -75,7 +82,6 @@ const config: HardhatUserConfig = {
         },
         user: {
             default: 3,
-            5: 1
         }
     },
     solidity: {

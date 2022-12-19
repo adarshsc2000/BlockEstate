@@ -1,8 +1,7 @@
 import {
     developmentChains,
     NUMBER_OF_BLOCK_CONFIRMATIONS,
-    NOTARY_WALLET_ADDRESS,
-    SLRB_WALLET_ADDRESS
+    networkConfig
 } from "../helper-hardhat-config";
 import verify from "../utils/verify";
 
@@ -16,6 +15,7 @@ const deployBlockEstate: DeployFunction = async function(
     const { deployments, getNamedAccounts, network } = hre;
     const { deploy, log } = deployments;
     const { deployer, notary, slrb } = await getNamedAccounts();
+    const chainId = network.config.chainId!;
     const waitBlockConfirmations = !developmentChains.includes(network.name)
         ? NUMBER_OF_BLOCK_CONFIRMATIONS
         : 1;
@@ -23,11 +23,8 @@ const deployBlockEstate: DeployFunction = async function(
     log(
         "*****************************************************************************************************************************\n"
     );
-
     // Constructor Arguments for BlockEstate
-    const args: any[] = developmentChains.includes(network.name)
-        ? [notary, slrb]
-        : [NOTARY_WALLET_ADDRESS, SLRB_WALLET_ADDRESS];
+    const args: any[] = [notary, slrb];
 
     // Deploying BlockEstate Contract
     const blockEstate = await deploy("BlockEstate", {
@@ -37,7 +34,7 @@ const deployBlockEstate: DeployFunction = async function(
         waitConfirmations: waitBlockConfirmations
     });
 
-    const argsNFT: any[] = [blockEstate.address];
+    const argsNFT: any[] = [blockEstate.address, networkConfig[chainId]["mintFee"]];
 
     // Deploying PropertyNFT Contract
     const propertyNFT = await deploy("PropertyNFT", {
@@ -62,4 +59,4 @@ const deployBlockEstate: DeployFunction = async function(
 };
 
 export default deployBlockEstate;
-deployBlockEstate.tags = ["all", "blockestate"];
+deployBlockEstate.tags = ["all", "blockestate", "property-nft"];

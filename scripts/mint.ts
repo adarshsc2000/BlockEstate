@@ -3,8 +3,8 @@ import { moveBlocks } from "../utils/move-blocks";
 const { storeNFTs } = require("../utils/uploadToNftStorage");
 
 async function mintProperty() {
-    const { user } = await getNamedAccounts();
-    const propertyNft = await ethers.getContract("PropertyNFT", user);
+    const { slrb, user } = await getNamedAccounts();
+    const propertyNft = await ethers.getContract("PropertyNFT", slrb);
     const responses = await storeNFTs("./assets/blockestate-logo.png");
 
     for (const response of responses) {
