@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 // Custom Errors
 error PropertyNFT__NotEnoughETHToMint();
 error PropertyNFT__TransferFailed();
+error PropertyNFT__UserIsNotSlrb();
 
 contract PropertyNFT is ERC721URIStorage, Ownable {
     // Counters to keep track of TokenID
@@ -16,27 +17,34 @@ contract PropertyNFT is ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIds;
 
     // State Variables //
-    address private immutable i_blockEstateContractAddress;
     uint256 private immutable i_mintFee;
+    address private immutable i_slrb;
 
     // Events //
     event PropertyMinted(uint256 tokenId, address owner);
+    event PropertyExpired(uint256 tokenId);
+
+    // Modifiers //
+    modifier onlySlrb() {
+        if (msg.sender != i_slrb) {
+            revert PropertyNFT__UserIsNotSlrb();
+        }
+        _;
+    }
 
     // constructor //
     constructor(
-        address _blockEstateAddress,
-        uint256 _mintFee
-    ) ERC721("Block Estate Tokens", "BET") {
-        i_blockEstateContractAddress = _blockEstateAddress;
+        uint256 _mintFee,
+        address _slrb
+    ) ERC721("BlockEstate NFTs", "BEN") {
         i_mintFee = _mintFee;
-        // give BlockEstate the permission to mint PropertyNFT
-        setApprovalForAll(i_blockEstateContractAddress, true);
+        i_slrb = _slrb;
     }
 
-    function mintProperty(
+    function mintPropertyNFT(
         string memory tokenURI,
         address propertyOwner
-    ) public payable returns (uint256) {
+    ) public payable onlySlrb returns (uint256) {
         if (msg.value < i_mintFee) {
             revert PropertyNFT__NotEnoughETHToMint();
         }
@@ -46,6 +54,11 @@ contract PropertyNFT is ERC721URIStorage, Ownable {
         _setTokenURI(latestPropertyID, tokenURI);
         emit PropertyMinted(latestPropertyID, propertyOwner);
         return latestPropertyID;
+    }
+
+    function expirePropertyNFT(uint256 _tokenId) public onlySlrb {
+        _burn(_tokenId);
+        emit PropertyExpired(_tokenId);
     }
 
     function withdraw() public onlyOwner {

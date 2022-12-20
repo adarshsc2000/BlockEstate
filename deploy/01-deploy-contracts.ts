@@ -8,6 +8,7 @@ import verify from "../utils/verify";
 // Type declarations
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { ethers } from "hardhat";
 
 const deployBlockEstate: DeployFunction = async function(
     hre: HardhatRuntimeEnvironment
@@ -23,8 +24,19 @@ const deployBlockEstate: DeployFunction = async function(
     log(
         "*****************************************************************************************************************************\n"
     );
+
+    // Constructor Arguments for PropertyNFT
+    const argsNFT: any[] = [networkConfig[chainId]["mintFee"], slrb];
+
+    // Deploying PropertyNFT Contract
+    const propertyNFT = await deploy("PropertyNFT", {
+        from: deployer,
+        args: argsNFT,
+        log: true,
+        waitConfirmations: waitBlockConfirmations
+    });
     // Constructor Arguments for BlockEstate
-    const args: any[] = [notary, slrb];
+    const args: any[] = [propertyNFT.address, notary, slrb];
 
     // Deploying BlockEstate Contract
     const blockEstate = await deploy("BlockEstate", {
@@ -34,15 +46,22 @@ const deployBlockEstate: DeployFunction = async function(
         waitConfirmations: waitBlockConfirmations
     });
 
-    const argsNFT: any[] = [blockEstate.address, networkConfig[chainId]["mintFee"]];
-
-    // Deploying PropertyNFT Contract
-    const propertyNFT = await deploy("PropertyNFT", {
-        from: deployer,
-        args: argsNFT,
-        log: true,
-        waitConfirmations: waitBlockConfirmations
-    });
+    console.log(
+        "Providing access to BlockEstate to mint and burn Property NFTs"
+    );
+    // Provide BlockEstate with the permission to mint PropertyNFT
+    const propertyNFTContract = await ethers.getContract(
+        "PropertyNFT",
+        deployer
+    );
+    const isApprovedForAll = propertyNFTContract.isApprovedForAll(
+        deployer,
+        blockEstate.address
+    );
+    if (!isApprovedForAll) {
+        await propertyNFTContract.setApprovalForAll(blockEstate.address, true);
+    }
+    console.log("Access Provided!");
 
     // Verify the deployment
     if (
@@ -50,8 +69,8 @@ const deployBlockEstate: DeployFunction = async function(
         process.env.ETHERSCAN_API_KEY
     ) {
         log("Verifying...");
-        await verify(blockEstate.address, args);
         await verify(propertyNFT.address, argsNFT);
+        await verify(blockEstate.address, args);
     }
     log(
         "\n*****************************************************************************************************************************"

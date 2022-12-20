@@ -17,6 +17,9 @@ const updateFrontEnd: DeployFunction = async function() {
         console.log("Updating ABIs to Frontend...");
         await updateAbi();
         console.log("Updated to the Frontend");
+        console.log(
+            "\n*****************************************************************************************************************************"
+        );
     }
 };
 

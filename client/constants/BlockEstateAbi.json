@@ -3,57 +3,62 @@
     "type": "constructor",
     "payable": false,
     "inputs": [
+      { "type": "address", "name": "_propertyNFTAddress" },
       { "type": "address", "name": "_notary" },
       { "type": "address", "name": "_slrb" }
     ]
   },
+  { "type": "error", "name": "BlockEstate__ETHMustBeMoreThanZero", "inputs": [] },
+  { "type": "error", "name": "BlockEstate__ETHTransferFailed", "inputs": [] },
+  { "type": "error", "name": "BlockEstate__InvalidNFTForBlockEstate", "inputs": [] },
+  { "type": "error", "name": "BlockEstate__NoETHToWithdraw", "inputs": [] },
   {
     "type": "error",
-    "name": "AlreadyListed",
-    "inputs": [
-      { "type": "address", "name": "nftAddress" },
-      { "type": "uint256", "name": "tokenId" }
-    ]
+    "name": "BlockEstate__NoInterestOnPropertyYet",
+    "inputs": [{ "type": "uint256", "name": "tokenId" }]
   },
-  { "type": "error", "name": "NoProceeds", "inputs": [] },
-  { "type": "error", "name": "NotApprovedForMarketplace", "inputs": [] },
   {
     "type": "error",
-    "name": "NotListed",
+    "name": "BlockEstate__NotEnoughETH",
     "inputs": [
-      { "type": "address", "name": "nftAddress" },
-      { "type": "uint256", "name": "tokenId" }
-    ]
-  },
-  { "type": "error", "name": "NotOwner", "inputs": [] },
-  { "type": "error", "name": "PriceMustBeAboveZero", "inputs": [] },
-  {
-    "type": "error",
-    "name": "PriceNotMet",
-    "inputs": [
-      { "type": "address", "name": "nftAddress" },
       { "type": "uint256", "name": "tokenId" },
       { "type": "uint256", "name": "price" }
     ]
   },
+  { "type": "error", "name": "BlockEstate__NotOwner", "inputs": [] },
   {
-    "type": "event",
-    "anonymous": false,
-    "name": "PropertyBought",
-    "inputs": [
-      { "type": "address", "name": "buyer", "indexed": true },
-      { "type": "address", "name": "nftAddress", "indexed": true },
-      { "type": "uint256", "name": "tokenId", "indexed": true },
-      { "type": "uint256", "name": "price", "indexed": false }
-    ]
+    "type": "error",
+    "name": "BlockEstate__PropertyAlreadyForSale",
+    "inputs": [{ "type": "uint256", "name": "tokenId" }]
   },
+  {
+    "type": "error",
+    "name": "BlockEstate__PropertyAlreadyVerified",
+    "inputs": [{ "type": "uint256", "name": "tokenId" }]
+  },
+  {
+    "type": "error",
+    "name": "BlockEstate__PropertyNotOnSale",
+    "inputs": [{ "type": "uint256", "name": "tokenId" }]
+  },
+  { "type": "error", "name": "BlockEstate__UserIsNotNotary", "inputs": [] },
+  { "type": "error", "name": "BlockEstate__UserIsNotSlrb", "inputs": [] },
+  { "type": "error", "name": "BlockEstate__UserIsNotTheInterestedBuyer", "inputs": [] },
   {
     "type": "event",
     "anonymous": false,
     "name": "PropertyCanceled",
     "inputs": [
       { "type": "address", "name": "seller", "indexed": true },
-      { "type": "address", "name": "nftAddress", "indexed": true },
+      { "type": "uint256", "name": "tokenId", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "PropertyInterested",
+    "inputs": [
+      { "type": "address", "name": "buyer", "indexed": true },
       { "type": "uint256", "name": "tokenId", "indexed": true }
     ]
   },
@@ -63,50 +68,58 @@
     "name": "PropertyListed",
     "inputs": [
       { "type": "address", "name": "seller", "indexed": true },
-      { "type": "address", "name": "nftAddress", "indexed": true },
       { "type": "uint256", "name": "tokenId", "indexed": true },
       { "type": "uint256", "name": "price", "indexed": false }
     ]
   },
   {
-    "type": "function",
-    "name": "buyItem",
-    "constant": false,
-    "stateMutability": "payable",
-    "payable": true,
+    "type": "event",
+    "anonymous": false,
+    "name": "PropertyOwnershipTransfer",
     "inputs": [
-      { "type": "address", "name": "nftAddress" },
-      { "type": "uint256", "name": "tokenId" }
-    ],
-    "outputs": []
+      { "type": "uint256", "name": "oldTokenId", "indexed": false },
+      { "type": "uint256", "name": "newTokenId", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "PropertyTransaction",
+    "inputs": [
+      { "type": "address", "name": "buyer", "indexed": true },
+      { "type": "uint256", "name": "tokenId", "indexed": true },
+      { "type": "uint256", "name": "price", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "PropertyVerified",
+    "inputs": [{ "type": "uint256", "name": "tokenId", "indexed": false }]
   },
   {
     "type": "function",
-    "name": "cancelListing",
+    "name": "cancelPropertySale",
     "constant": false,
     "payable": false,
-    "inputs": [
-      { "type": "address", "name": "nftAddress" },
-      { "type": "uint256", "name": "tokenId" }
-    ],
+    "inputs": [{ "type": "uint256", "name": "tokenId" }],
     "outputs": []
   },
   {
     "type": "function",
-    "name": "getListing",
+    "name": "getListedProperty",
     "constant": true,
     "stateMutability": "view",
     "payable": false,
-    "inputs": [
-      { "type": "address", "name": "nftAddress" },
-      { "type": "uint256", "name": "tokenId" }
-    ],
+    "inputs": [{ "type": "uint256", "name": "tokenId" }],
     "outputs": [
       {
         "type": "tuple",
         "components": [
+          { "type": "address", "name": "seller" },
+          { "type": "address", "name": "buyer" },
           { "type": "uint256", "name": "price" },
-          { "type": "address", "name": "seller" }
+          { "type": "uint8", "name": "status" }
         ]
       }
     ]
@@ -122,6 +135,24 @@
   },
   {
     "type": "function",
+    "name": "isAdmin",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "bool" }]
+  },
+  {
+    "type": "function",
+    "name": "isNotary",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "bool" }]
+  },
+  {
+    "type": "function",
     "name": "isRegularUser",
     "constant": true,
     "stateMutability": "view",
@@ -131,11 +162,44 @@
   },
   {
     "type": "function",
-    "name": "listItem",
+    "name": "isSlrb",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "bool" }]
+  },
+  {
+    "type": "function",
+    "name": "payPropertySaleAmount",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [{ "type": "uint256", "name": "tokenId" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "propertyInterested",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "tokenId" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "propertyVerified",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "tokenId" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "sellProperty",
     "constant": false,
     "payable": false,
     "inputs": [
-      { "type": "address", "name": "nftAddress" },
       { "type": "uint256", "name": "tokenId" },
       { "type": "uint256", "name": "price" }
     ],
@@ -143,15 +207,14 @@
   },
   {
     "type": "function",
-    "name": "updateListing",
+    "name": "transferOwnership",
     "constant": false,
     "payable": false,
     "inputs": [
-      { "type": "address", "name": "nftAddress" },
-      { "type": "uint256", "name": "tokenId" },
-      { "type": "uint256", "name": "newPrice" }
+      { "type": "uint256", "name": "oldTokenId" },
+      { "type": "string", "name": "tokenURI" }
     ],
-    "outputs": []
+    "outputs": [{ "type": "uint256" }]
   },
   {
     "type": "function",

@@ -9,7 +9,9 @@ async function mintProperty() {
 
     for (const response of responses) {
         console.log("Minting NFT...");
-        const mintTx = await propertyNft.mintProperty(response.url, user);
+        const mintTx = await propertyNft.mintPropertyNFT(response.url, user, {
+            value: ethers.utils.parseEther("0.002")
+        });
         const mintTxReceipt = await mintTx.wait(1);
         console.log(
             `Minted tokenId ${mintTxReceipt.events[0].args.tokenId.toString()} from contract: ${
