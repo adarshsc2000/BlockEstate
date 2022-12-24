@@ -7,6 +7,7 @@ const path = require("path");
 require("dotenv").config();
 
 const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY;
+let responses = [];
 
 /**
  * Reads an image file from `imagePath` and stores an NFT with the given name and description.
@@ -17,17 +18,19 @@ const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY;
 async function storeNFTs(imagesPath) {
     const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
 
-    let responses = [];
-    for (const property of await getProperties()) {
-        const image = await fileFromPath(path.resolve(imagesPath));
-        const propertyName = `Property ${property.propertyID}`;
-        const response = await nftstorage.store({
-            image,
-            name: propertyName,
-            description: `The Apartment has free high-speed WIFI, fully equipped kitchen with dishwasher, TV with international channels, air-condition and a new modern interior combined with beautifully preserved old wooden floors. Comfortably sleeps 6 guests.`,
-            properties: property
-        });
-        responses.push(response);
+    if(responses.length == 0)
+    {
+        for (const property of await getProperties()) {
+            const image = await fileFromPath(path.resolve(imagesPath));
+            const propertyName = `Property ${property.propertyID}`;
+            const response = await nftstorage.store({
+                image,
+                name: propertyName,
+                description: `The Apartment has free high-speed WIFI, fully equipped kitchen with dishwasher, TV with international channels, air-condition and a new modern interior combined with beautifully preserved old wooden floors. Comfortably sleeps 6 guests.`,
+                properties: property
+            });
+            responses.push(response);
+        }
     }
     return responses;
 }

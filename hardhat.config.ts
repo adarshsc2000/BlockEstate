@@ -4,6 +4,7 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "solidity-coverage";
 import "hardhat-deploy";
+import "hardhat-gas-reporter";
 import "dotenv/config";
 
 const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY || "";
@@ -12,6 +13,8 @@ const SLRB_PRIVATE_KEY = process.env.SLRB_PRIVATE_KEY || "";
 const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY || "";
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "";
+const REPORT_GAS = Boolean(process.env.REPORT_GAS) || undefined;
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
@@ -59,13 +62,13 @@ const config: HardhatUserConfig = {
             // polygon: POLYGONSCAN_API_KEY,
         }
     },
-    // gasReporter: {
-    //     enabled: REPORT_GAS,
-    //     currency: "USD",
-    //     outputFile: "gas-report.txt",
-    //     noColors: true,
-    //     // coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-    // },
+    gasReporter: {
+        enabled: REPORT_GAS,
+        currency: "BHD",
+        outputFile: "gas-report.txt",
+        noColors: true,
+        coinmarketcap: COINMARKETCAP_API_KEY,
+    },
     // contractSizer: {
     //     runOnCompile: false,
     //     only: ["BlockEstate"],
@@ -81,7 +84,7 @@ const config: HardhatUserConfig = {
             default: 2
         },
         user: {
-            default: 3,
+            default: 3
         }
     },
     solidity: {
@@ -92,7 +95,7 @@ const config: HardhatUserConfig = {
         ]
     },
     mocha: {
-        timeout: 200000 // 200 seconds max for running tests
+        timeout: 2000000 // 2000 seconds max for running tests
     }
 };
 

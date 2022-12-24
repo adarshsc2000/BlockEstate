@@ -2,7 +2,6 @@
 pragma solidity ^0.8.9;
 
 // Import Statements
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./PropertyNFT.sol";
 
@@ -134,9 +133,6 @@ contract BlockEstate is ReentrancyGuard {
     ) external notOnSale(tokenId) isOwner(tokenId, msg.sender) {
         if (price <= 0) {
             revert BlockEstate__ETHMustBeMoreThanZero();
-        }
-        if (i_propertyNFT.getApproved(tokenId) != address(this)) {
-            revert BlockEstate__InvalidNFTForBlockEstate();
         }
         s_listings[tokenId] = Listing(
             msg.sender,

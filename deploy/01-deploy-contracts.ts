@@ -60,8 +60,11 @@ const deployBlockEstate: DeployFunction = async function(
     );
     if (!isApprovedForAll) {
         await propertyNFTContract.setApprovalForAll(blockEstate.address, true);
+        console.log("Access Provided!");
+    } else {
+        console.log("Access has already been provided!");
     }
-    console.log("Access Provided!");
+
 
     // Verify the deployment
     if (
