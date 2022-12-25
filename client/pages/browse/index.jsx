@@ -1,29 +1,65 @@
 import React, { useEffect, useState } from "react";
 import Navigationbar from "../../components/Navigationbar.jsx";
-import Meta from "../../components/Meta.jsx"
+import Meta from "../../components/Meta.jsx";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 import { Container } from "react-bootstrap";
-import Stack from 'react-bootstrap/Stack';
+import { Row, Col } from "react-bootstrap";
+import Stack from "react-bootstrap/Stack";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { BiBed, BiBath } from "react-icons/bi";
+import { FiMessageCircle } from "react-icons/fi";
+import { RxDimensions } from "react-icons/rx";
 import BrowsePropertyCard from "../../components/BrowsePropertyCard.jsx";
-import properties from '../../properties.js'
-import ownership from "../../ownership.js";
+import properties from "../../properties.js";
+
+// graph
+import { useQuery } from "@apollo/client";
+import GET_ACTIVE_PROPERTIES from "../../constants/subgraphQueries";
 
 //import {isWeb3Enabled} from useMoralis;
 
-
 export default function browse(props) {
+  
+  // graph test
+  const { loading, error, data: listedProperties } = useQuery(GET_ACTIVE_PROPERTIES);
+  loading || !listedProperties
+    ? console.log("Loading...")
+    : listedProperties.activeProperties.map((property) => console.log(property));
+  // end graph test
+
+  /*   const [provider, setProvider] = useState({})
+
+    useEffect(() => {
+      setProvider(new ethers.providers.Web3Provider(window.ethereum))
+    }, []); */
+  const [isConnectedToWallet, setIsConnectedToWallet] = useState(true); //made true for testing , should be isWeb3Enabled
+  /*   useEffect(function () {
+      if (isWeb3Enabled )
+        setIsConnectedToWallet(true)
+      else
+        setIsConnectedToWallet(false)
+    }, [isWeb3Enabled ])
+ */
 
   const propertyCardElements = properties.map((property, index) => {
-    //go through each property to display it
-
-    const isListed = ownership.find((ownershipItem) => {
-      if (ownershipItem.property_id == property.property_id)
-        return ownershipItem.listed
-    })
-    //check if the property is listed in ownership table, if listed==false, dont display it
-    if (isListed)
-      return <BrowsePropertyCard key={index} property_id={property.property_id} image={property.images[0]} propertyType={property.propertyType} priceInBhd={property.priceInBhd} description={property.description} location={property.location} bedrooms={property.bedrooms} bathrooms={property.bathrooms} propertyArea={property.propertyArea} postDate={property.postDate} phoneNumber={property.phoneNumber} />
-
-  })
+    return (
+      <BrowsePropertyCard
+        key={index}
+        property_id={property.property_id}
+        image={property.images[0]}
+        propertyType={property.propertyType}
+        priceInBhd={property.priceInBhd}
+        description={property.description}
+        location={property.location}
+        bedrooms={property.bedrooms}
+        bathrooms={property.bathrooms}
+        propertyArea={property.propertyArea}
+        postDate={property.postDate}
+        phoneNumber={property.phoneNumber}
+      />
+    );
+  });
 
   const [domLoaded, setDomLoaded] = useState(false);
   useEffect(() => {
@@ -31,19 +67,29 @@ export default function browse(props) {
   }, []); //work around for hydration failed msg in bedroom number stack
   return (
     <div>
-      <Navigationbar pageType="seller_buyer" />
       <Meta title="Browse properties" />
+      <Navigationbar />
       <br /> <br />
       <Container>
         <Stack gap={4}>
+          <BrowsePropertyCard
+            image="pic1prop1.jpeg"
+            propertyType="Apartment"
+            priceInBhd="400"
+            description="Sea view apartment with many....slice method used to truim the string to 11 chars, so 2 lines on md screen. otherwise img does not fit card"
+            location="Abraj Al Lulu, Manama, Capital Governate"
+            bedrooms="8"
+            bathrooms="8"
+            propertyArea="736"
+            postDate="5/12/2022"
+            phoneNumber="97333344444"
+          />
           {propertyCardElements}
-
         </Stack>
       </Container>
     </div>
-  )
+  );
 }
-
 
 /* export async function getServerSideProps() {
   const res = await fetch()
