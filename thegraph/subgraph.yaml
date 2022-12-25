@@ -6,17 +6,20 @@ dataSources:
     name: BlockEstate
     network: goerli
     source:
-      address: "0x41B3abB28D76695D5e9ea1D99AB5FE5f5240eaF9"
+      address: "0xa86459a2a701aDED448c0130577712Ffb92Ae35b"
       abi: BlockEstate
-      startBlock: 8127187 
+      startBlock: 8127187
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - PropertyBought
-        - PropertyCanceled
-        - PropertyListed
+        - ContractPropertyCanceled
+        - PropertyInterested
+        - ContractPropertyListed
+        - PropertyOwnershipTransfer
+        - PropertyTransaction
+        - PropertyVerified
       abis:
         - name: BlockEstate
           file: ./abis/BlockEstate.json
@@ -28,3 +31,37 @@ dataSources:
         - event: PropertyListed(indexed address,indexed address,indexed uint256,uint256)
           handler: handlePropertyListed
       file: ./src/block-estate.ts
+  - kind: ethereum
+    name: PropertyNFT
+    network: goerli
+    source:
+      address: "0x4e9Ff08d1d2832F4F614Afbc75CdF5C47b674C35"
+      abi: PropertyNFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - OwnershipTransferred
+        - PropertyExpired
+        - PropertyMinted
+        - Transfer
+      abis:
+        - name: PropertyNFT
+          file: ./abis/PropertyNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PropertyExpired(uint256)
+          handler: handlePropertyExpired
+        - event: PropertyMinted(uint256,address)
+          handler: handlePropertyMinted
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/property-nft.ts

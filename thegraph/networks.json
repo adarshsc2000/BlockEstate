@@ -2,6 +2,9 @@
   "goerli": {
     "BlockEstate": {
       "address": "0x41B3abB28D76695D5e9ea1D99AB5FE5f5240eaF9"
+    },
+    "PropertyNFT": {
+      "address": "0x4e9Ff08d1d2832F4F614Afbc75CdF5C47b674C35"
     }
   }
 }
