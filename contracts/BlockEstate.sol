@@ -57,10 +57,14 @@ contract BlockEstate is ReentrancyGuard {
         uint256 price
     );
 
-    event PropertyOwnershipTransfer(uint256 oldTokenId, uint256 newTokenId);
+    event PropertyOwnershipTransfer(
+        uint256 oldTokenId,
+        uint256 newTokenId,
+        string tokenURI
+    );
 
     // State Variables //
-    PropertyNFT private immutable i_propertyNFT; 
+    PropertyNFT private immutable i_propertyNFT;
     address private immutable i_admin;
     address private immutable i_notary;
     address private immutable i_slrb;
@@ -114,7 +118,7 @@ contract BlockEstate is ReentrancyGuard {
     }
 
     // Constructor //
-    constructor( address _propertyNFTAddress, address _notary, address _slrb) {
+    constructor(address _propertyNFTAddress, address _notary, address _slrb) {
         i_propertyNFT = PropertyNFT(_propertyNFTAddress);
         i_admin = msg.sender;
         i_notary = _notary;
@@ -172,9 +176,9 @@ contract BlockEstate is ReentrancyGuard {
     function propertyVerified(uint256 tokenId) external onlyNotary {
         Listing memory property = s_listings[tokenId];
         if (property.status == Status.LISTED) {
-            revert BlockEstate__NoInterestOnPropertyYet(tokenId); 
+            revert BlockEstate__NoInterestOnPropertyYet(tokenId);
         } else if (property.status > Status.INTERESTED) {
-            revert BlockEstate__PropertyAlreadyVerified(tokenId); 
+            revert BlockEstate__PropertyAlreadyVerified(tokenId);
         }
         s_listings[tokenId].status = Status.VERIFIED;
         emit PropertyVerified(tokenId);
@@ -215,7 +219,7 @@ contract BlockEstate is ReentrancyGuard {
         );
         i_propertyNFT.expirePropertyNFT(oldTokenId);
         delete (s_listings[oldTokenId]);
-        emit PropertyOwnershipTransfer(oldTokenId, newTokenId);
+        emit PropertyOwnershipTransfer(oldTokenId, newTokenId, tokenURI);
         return newTokenId;
     }
 

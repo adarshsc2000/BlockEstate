@@ -10,36 +10,6 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
-export class PropertyBought extends ethereum.Event {
-  get params(): PropertyBought__Params {
-    return new PropertyBought__Params(this);
-  }
-}
-
-export class PropertyBought__Params {
-  _event: PropertyBought;
-
-  constructor(event: PropertyBought) {
-    this._event = event;
-  }
-
-  get buyer(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get nftAddress(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get tokenId(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get price(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
-  }
-}
-
 export class PropertyCanceled extends ethereum.Event {
   get params(): PropertyCanceled__Params {
     return new PropertyCanceled__Params(this);
@@ -57,12 +27,30 @@ export class PropertyCanceled__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get nftAddress(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get tokenId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class PropertyInterested extends ethereum.Event {
+  get params(): PropertyInterested__Params {
+    return new PropertyInterested__Params(this);
+  }
+}
+
+export class PropertyInterested__Params {
+  _event: PropertyInterested;
+
+  constructor(event: PropertyInterested) {
+    this._event = event;
+  }
+
+  get buyer(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
   get tokenId(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 }
 
@@ -83,26 +71,100 @@ export class PropertyListed__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get nftAddress(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get tokenId(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get price(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
-export class BlockEstate__getListingResultValue0Struct extends ethereum.Tuple {
-  get price(): BigInt {
-    return this[0].toBigInt();
+export class PropertyOwnershipTransfer extends ethereum.Event {
+  get params(): PropertyOwnershipTransfer__Params {
+    return new PropertyOwnershipTransfer__Params(this);
+  }
+}
+
+export class PropertyOwnershipTransfer__Params {
+  _event: PropertyOwnershipTransfer;
+
+  constructor(event: PropertyOwnershipTransfer) {
+    this._event = event;
   }
 
+  get oldTokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get newTokenId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get tokenURI(): string {
+    return this._event.parameters[2].value.toString();
+  }
+}
+
+export class PropertyTransaction extends ethereum.Event {
+  get params(): PropertyTransaction__Params {
+    return new PropertyTransaction__Params(this);
+  }
+}
+
+export class PropertyTransaction__Params {
+  _event: PropertyTransaction;
+
+  constructor(event: PropertyTransaction) {
+    this._event = event;
+  }
+
+  get buyer(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get price(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class PropertyVerified extends ethereum.Event {
+  get params(): PropertyVerified__Params {
+    return new PropertyVerified__Params(this);
+  }
+}
+
+export class PropertyVerified__Params {
+  _event: PropertyVerified;
+
+  constructor(event: PropertyVerified) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class BlockEstate__getListedPropertyResultValue0Struct extends ethereum.Tuple {
   get seller(): Address {
+    return this[0].toAddress();
+  }
+
+  get buyer(): Address {
     return this[1].toAddress();
+  }
+
+  get price(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get status(): i32 {
+    return this[3].toI32();
   }
 }
 
@@ -111,42 +173,36 @@ export class BlockEstate extends ethereum.SmartContract {
     return new BlockEstate("BlockEstate", address);
   }
 
-  getListing(
-    nftAddress: Address,
+  getListedProperty(
     tokenId: BigInt
-  ): BlockEstate__getListingResultValue0Struct {
+  ): BlockEstate__getListedPropertyResultValue0Struct {
     let result = super.call(
-      "getListing",
-      "getListing(address,uint256):((uint256,address))",
-      [
-        ethereum.Value.fromAddress(nftAddress),
-        ethereum.Value.fromUnsignedBigInt(tokenId)
-      ]
+      "getListedProperty",
+      "getListedProperty(uint256):((address,address,uint256,uint8))",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
     );
 
-    return changetype<BlockEstate__getListingResultValue0Struct>(
+    return changetype<BlockEstate__getListedPropertyResultValue0Struct>(
       result[0].toTuple()
     );
   }
 
-  try_getListing(
-    nftAddress: Address,
+  try_getListedProperty(
     tokenId: BigInt
-  ): ethereum.CallResult<BlockEstate__getListingResultValue0Struct> {
+  ): ethereum.CallResult<BlockEstate__getListedPropertyResultValue0Struct> {
     let result = super.tryCall(
-      "getListing",
-      "getListing(address,uint256):((uint256,address))",
-      [
-        ethereum.Value.fromAddress(nftAddress),
-        ethereum.Value.fromUnsignedBigInt(tokenId)
-      ]
+      "getListedProperty",
+      "getListedProperty(uint256):((address,address,uint256,uint8))",
+      [ethereum.Value.fromUnsignedBigInt(tokenId)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<BlockEstate__getListingResultValue0Struct>(value[0].toTuple())
+      changetype<BlockEstate__getListedPropertyResultValue0Struct>(
+        value[0].toTuple()
+      )
     );
   }
 
@@ -170,149 +226,327 @@ export class BlockEstate extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
-}
 
-export class BuyItemCall extends ethereum.Call {
-  get inputs(): BuyItemCall__Inputs {
-    return new BuyItemCall__Inputs(this);
+  isAdmin(): boolean {
+    let result = super.call("isAdmin", "isAdmin():(bool)", []);
+
+    return result[0].toBoolean();
   }
 
-  get outputs(): BuyItemCall__Outputs {
-    return new BuyItemCall__Outputs(this);
+  try_isAdmin(): ethereum.CallResult<boolean> {
+    let result = super.tryCall("isAdmin", "isAdmin():(bool)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isNotary(): boolean {
+    let result = super.call("isNotary", "isNotary():(bool)", []);
+
+    return result[0].toBoolean();
+  }
+
+  try_isNotary(): ethereum.CallResult<boolean> {
+    let result = super.tryCall("isNotary", "isNotary():(bool)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isRegularUser(): boolean {
+    let result = super.call("isRegularUser", "isRegularUser():(bool)", []);
+
+    return result[0].toBoolean();
+  }
+
+  try_isRegularUser(): ethereum.CallResult<boolean> {
+    let result = super.tryCall("isRegularUser", "isRegularUser():(bool)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isSlrb(): boolean {
+    let result = super.call("isSlrb", "isSlrb():(bool)", []);
+
+    return result[0].toBoolean();
+  }
+
+  try_isSlrb(): ethereum.CallResult<boolean> {
+    let result = super.tryCall("isSlrb", "isSlrb():(bool)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  transferOwnership(oldTokenId: BigInt, tokenURI: string): BigInt {
+    let result = super.call(
+      "transferOwnership",
+      "transferOwnership(uint256,string):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(oldTokenId),
+        ethereum.Value.fromString(tokenURI)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_transferOwnership(
+    oldTokenId: BigInt,
+    tokenURI: string
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "transferOwnership",
+      "transferOwnership(uint256,string):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(oldTokenId),
+        ethereum.Value.fromString(tokenURI)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 }
 
-export class BuyItemCall__Inputs {
-  _call: BuyItemCall;
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
+  }
 
-  constructor(call: BuyItemCall) {
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
+  }
+}
+
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
     this._call = call;
   }
 
-  get nftAddress(): Address {
+  get _propertyNFTAddress(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get tokenId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get _notary(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _slrb(): Address {
+    return this._call.inputValues[2].value.toAddress();
   }
 }
 
-export class BuyItemCall__Outputs {
-  _call: BuyItemCall;
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
 
-  constructor(call: BuyItemCall) {
+  constructor(call: ConstructorCall) {
     this._call = call;
   }
 }
 
-export class CancelListingCall extends ethereum.Call {
-  get inputs(): CancelListingCall__Inputs {
-    return new CancelListingCall__Inputs(this);
+export class CancelPropertySaleCall extends ethereum.Call {
+  get inputs(): CancelPropertySaleCall__Inputs {
+    return new CancelPropertySaleCall__Inputs(this);
   }
 
-  get outputs(): CancelListingCall__Outputs {
-    return new CancelListingCall__Outputs(this);
+  get outputs(): CancelPropertySaleCall__Outputs {
+    return new CancelPropertySaleCall__Outputs(this);
   }
 }
 
-export class CancelListingCall__Inputs {
-  _call: CancelListingCall;
+export class CancelPropertySaleCall__Inputs {
+  _call: CancelPropertySaleCall;
 
-  constructor(call: CancelListingCall) {
+  constructor(call: CancelPropertySaleCall) {
     this._call = call;
-  }
-
-  get nftAddress(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get tokenId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class CancelListingCall__Outputs {
-  _call: CancelListingCall;
-
-  constructor(call: CancelListingCall) {
-    this._call = call;
-  }
-}
-
-export class ListItemCall extends ethereum.Call {
-  get inputs(): ListItemCall__Inputs {
-    return new ListItemCall__Inputs(this);
-  }
-
-  get outputs(): ListItemCall__Outputs {
-    return new ListItemCall__Outputs(this);
-  }
-}
-
-export class ListItemCall__Inputs {
-  _call: ListItemCall;
-
-  constructor(call: ListItemCall) {
-    this._call = call;
-  }
-
-  get nftAddress(): Address {
-    return this._call.inputValues[0].value.toAddress();
   }
 
   get tokenId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class CancelPropertySaleCall__Outputs {
+  _call: CancelPropertySaleCall;
+
+  constructor(call: CancelPropertySaleCall) {
+    this._call = call;
+  }
+}
+
+export class PayPropertySaleAmountCall extends ethereum.Call {
+  get inputs(): PayPropertySaleAmountCall__Inputs {
+    return new PayPropertySaleAmountCall__Inputs(this);
+  }
+
+  get outputs(): PayPropertySaleAmountCall__Outputs {
+    return new PayPropertySaleAmountCall__Outputs(this);
+  }
+}
+
+export class PayPropertySaleAmountCall__Inputs {
+  _call: PayPropertySaleAmountCall;
+
+  constructor(call: PayPropertySaleAmountCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class PayPropertySaleAmountCall__Outputs {
+  _call: PayPropertySaleAmountCall;
+
+  constructor(call: PayPropertySaleAmountCall) {
+    this._call = call;
+  }
+}
+
+export class PropertyInterestedCall extends ethereum.Call {
+  get inputs(): PropertyInterestedCall__Inputs {
+    return new PropertyInterestedCall__Inputs(this);
+  }
+
+  get outputs(): PropertyInterestedCall__Outputs {
+    return new PropertyInterestedCall__Outputs(this);
+  }
+}
+
+export class PropertyInterestedCall__Inputs {
+  _call: PropertyInterestedCall;
+
+  constructor(call: PropertyInterestedCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class PropertyInterestedCall__Outputs {
+  _call: PropertyInterestedCall;
+
+  constructor(call: PropertyInterestedCall) {
+    this._call = call;
+  }
+}
+
+export class PropertyVerifiedCall extends ethereum.Call {
+  get inputs(): PropertyVerifiedCall__Inputs {
+    return new PropertyVerifiedCall__Inputs(this);
+  }
+
+  get outputs(): PropertyVerifiedCall__Outputs {
+    return new PropertyVerifiedCall__Outputs(this);
+  }
+}
+
+export class PropertyVerifiedCall__Inputs {
+  _call: PropertyVerifiedCall;
+
+  constructor(call: PropertyVerifiedCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class PropertyVerifiedCall__Outputs {
+  _call: PropertyVerifiedCall;
+
+  constructor(call: PropertyVerifiedCall) {
+    this._call = call;
+  }
+}
+
+export class SellPropertyCall extends ethereum.Call {
+  get inputs(): SellPropertyCall__Inputs {
+    return new SellPropertyCall__Inputs(this);
+  }
+
+  get outputs(): SellPropertyCall__Outputs {
+    return new SellPropertyCall__Outputs(this);
+  }
+}
+
+export class SellPropertyCall__Inputs {
+  _call: SellPropertyCall;
+
+  constructor(call: SellPropertyCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
   }
 
   get price(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class ListItemCall__Outputs {
-  _call: ListItemCall;
-
-  constructor(call: ListItemCall) {
-    this._call = call;
-  }
-}
-
-export class UpdateListingCall extends ethereum.Call {
-  get inputs(): UpdateListingCall__Inputs {
-    return new UpdateListingCall__Inputs(this);
-  }
-
-  get outputs(): UpdateListingCall__Outputs {
-    return new UpdateListingCall__Outputs(this);
-  }
-}
-
-export class UpdateListingCall__Inputs {
-  _call: UpdateListingCall;
-
-  constructor(call: UpdateListingCall) {
-    this._call = call;
-  }
-
-  get nftAddress(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get tokenId(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
+}
 
-  get newPrice(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+export class SellPropertyCall__Outputs {
+  _call: SellPropertyCall;
+
+  constructor(call: SellPropertyCall) {
+    this._call = call;
   }
 }
 
-export class UpdateListingCall__Outputs {
-  _call: UpdateListingCall;
+export class TransferOwnershipCall extends ethereum.Call {
+  get inputs(): TransferOwnershipCall__Inputs {
+    return new TransferOwnershipCall__Inputs(this);
+  }
 
-  constructor(call: UpdateListingCall) {
+  get outputs(): TransferOwnershipCall__Outputs {
+    return new TransferOwnershipCall__Outputs(this);
+  }
+}
+
+export class TransferOwnershipCall__Inputs {
+  _call: TransferOwnershipCall;
+
+  constructor(call: TransferOwnershipCall) {
     this._call = call;
+  }
+
+  get oldTokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get tokenURI(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+}
+
+export class TransferOwnershipCall__Outputs {
+  _call: TransferOwnershipCall;
+
+  constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+
+  get value0(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
   }
 }
 

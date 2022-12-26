@@ -9,7 +9,7 @@ async function mintAndListProperty() {
     const { slrb, user } = await getNamedAccounts();
     const propertyNft = await ethers.getContract("PropertyNFT", slrb);
     const blockEstate = await ethers.getContract("BlockEstate", user);
-    const responses = await storeNFTs("./assets/blockestate-logo.png");
+    const responses = await storeNFTs("./assets/images/property-image-1.jpg");
     for (const response of responses) {
         console.log("Minting NFT...");
         const mintTx = await propertyNft.mintPropertyNFT(response.url, user, {

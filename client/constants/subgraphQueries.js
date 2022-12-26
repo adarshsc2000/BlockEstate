@@ -1,16 +1,56 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
-const GET_ACTIVE_PROPERTIES = gql`
+const GET_LISTED_PROPERTIES = gql`
   {
-    activeProperties(first: 5, where: { buyer: "0x0000000000000000000000000000000000000000" }) {
+    propertyForSales(where: { status: LISTED }) {
+    id
+    property {
       id
-      buyer
-      seller
-      nftAddress
-      tokenId
-      price
+      owner {
+        id
+      }
+      ipfsURL
     }
+    price
+  }
   }
 `;
 
-export default GET_ACTIVE_PROPERTIES;
+const GET_INTERESTED_PROPERTIES = gql`
+{
+  propertyForSales(where: { status: INTERESTED }) {
+    id
+    property {
+      id
+      owner {
+        id
+      }
+      ipfsURL
+    }
+    price
+  }
+}
+`;
+
+export function getListedProperties() {
+  const { loading, error, data: listedProperties } = useQuery(GET_LISTED_PROPERTIES);
+    if (loading) return "Loading...";
+    else if (error) return "Error..", error.message;
+    else 
+    {
+      const propertiesOnSale = listedProperties.propertyForSales;
+      return propertiesOnSale;
+    }
+}
+
+export function getPropertiesToVerify() {
+  const { loading, error, data: interestedProperties } = useQuery(GET_INTERESTED_PROPERTIES);
+    if (loading) return "Loading...";
+    else if (error) return "Error..", error.message;
+    else 
+    {
+      const propertiesToVerify = interestedProperties.propertyForSales;
+      return propertiesToVerify;
+    }
+}
+
