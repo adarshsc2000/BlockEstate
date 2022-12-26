@@ -3,7 +3,7 @@ import Navigationbar from "../../components/Navigationbar.jsx";
 import Meta from "../../components/Meta.jsx";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { Container } from "react-bootstrap";
+import { Container, Placeholder } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
 import Stack from "react-bootstrap/Stack";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -12,78 +12,129 @@ import { FiMessageCircle } from "react-icons/fi";
 import { RxDimensions } from "react-icons/rx";
 import BrowsePropertyCard from "../../components/BrowsePropertyCard.jsx";
 import properties from "../../properties.js";
+import { useMoralis } from "react-moralis";
 
 // graph
-import { getListedProperties, getPropertiesToVerify } from "../../constants/subgraphQueries";
+import { GET_LISTED_PROPERTIES } from "../../constants/subgraphQueries";
+import { useQuery } from "@apollo/client";
 
 //import {isWeb3Enabled} from useMoralis;
 
 export default function browse(props) {
-  
-  // graph test
-  console.log(getListedProperties());
-  console.log(getPropertiesToVerify());
-  // end graph test
+  const [propertyDetails, setPropertyDetails] = useState([]);
+  let propertiesOnSale = undefined;
+
+  const { isWeb3Enabled } = useMoralis();
+  const { loading, error, data: listedProperties } = useQuery(GET_LISTED_PROPERTIES);
+  if (loading) {
+    return <Placeholder />;
+  } else if (error) {
+    console.log("Error: " + error);
+    return error;
+  } else {
+    propertiesOnSale = listedProperties.propertyForSales;
+  }
+
+
+
+  // for (let property of propertiesOnSale) {
+  //   const ipfsUrl = property.property.ipfsURL;
+  //   const requestUrl = ipfsUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
+  //   getPropertyDetails(requestUrl, property).then((value) => {
+  //     setPropertyDetails((arr) => [...arr, value]);
+  //   })
+  // }
 
   
-  /*   const [provider, setProvider] = useState({})
 
-    useEffect(() => {
-      setProvider(new ethers.providers.Web3Provider(window.ethereum))
-    }, []); */
-  const [isConnectedToWallet, setIsConnectedToWallet] = useState(true); //made true for testing , should be isWeb3Enabled
-  /*   useEffect(function () {
-      if (isWeb3Enabled )
-        setIsConnectedToWallet(true)
-      else
-        setIsConnectedToWallet(false)
-    }, [isWeb3Enabled ])
- */
+  if(propertiesOnSale)
+  {
+    propertiesOnSale.forEach((property) => {
+      const ipfsUrl = property.property.ipfsURL;
+      const requestUrl = ipfsUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
+      getPropertyDetails(requestUrl, property).then((value) => {
+        setPropertyDetails((arr) => [...arr, value]);
+      });
+    });
+  }
 
-  const propertyCardElements = properties.map((property, index) => {
+  async function getPropertyDetails(requestURL, property) {
+    let propertyInfo = await (await fetch(requestURL)).json();
+    const ipfsMainImageUrl = propertyInfo.image;
+    const requestImageUrl = ipfsMainImageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
     return (
       <BrowsePropertyCard
-        key={index}
-        property_id={property.property_id}
-        image={property.images[0]}
-        propertyType={property.propertyType}
-        priceInBhd={property.priceInBhd}
-        description={property.description}
-        location={property.location}
-        bedrooms={property.bedrooms}
-        bathrooms={property.bathrooms}
-        propertyArea={property.propertyArea}
-        postDate={property.postDate}
-        phoneNumber={property.phoneNumber}
+        key={property.property.id}
+        property_id={propertyInfo.propertyID}
+        image={requestImageUrl}
+        propertyType={propertyInfo.properties.propertyType}
+        priceInBhd={propertyInfo.properties.oldPriceInBhd}
+        description={propertyInfo.description}
+        location={propertyInfo.properties.location}
+        bedrooms={propertyInfo.properties.bedrooms}
+        bathrooms={propertyInfo.properties.bathrooms}
+        propertyArea={propertyInfo.properties.area}
+        phoneNumber={propertyInfo.properties.phone}
+        postDate="01/01/2022"
       />
     );
-  });
+  }
 
-  const [domLoaded, setDomLoaded] = useState(false);
-  useEffect(() => {
-    setDomLoaded(true);
-  }, []); //work around for hydration failed msg in bedroom number stack
+  // const propertyDetailsPromise = propertiesOnSale.map(async (property) => {
+  //   const ipfsUrl = property.property.ipfsURL;
+  //   const requestUrl = ipfsUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
+  //   return getPropertyDetails(requestUrl).then((propertyDetails) => {
+  //     return (
+  //       <BrowsePropertyCard
+  //         key={property.property.id}
+  //         property_id={propertyDetails.propertyId}
+  //         // image={property.images[0]}
+  //         propertyType={property.propertyType}
+  //         priceInBhd={property.priceInBhd}
+  //         description={property.description}
+  //         location={property.location}
+  //         bedrooms={property.bedrooms}
+  //         bathrooms={property.bathrooms}
+  //         propertyArea={property.propertyArea}
+  //         postDate={property.postDate}
+  //         phoneNumber={property.phoneNumber}
+  //       />
+  //     );
+  //   });
+  // });
+  // Promise.all(propertyDetailsPromise).then((propertyDetails) => {
+  //   console.log(propertyDetails);
+  // });
+  // const propertyCardElements = properties.map((property, index) => {
+  //   return (
+  //     <BrowsePropertyCard
+  //       key={index}
+  //       property_id={property.property_id}
+  //       image={property.images[0]}
+  //       propertyType={property.propertyType}
+  //       priceInBhd={property.priceInBhd}
+  //       description={property.description}
+  //       location={property.location}
+  //       bedrooms={property.bedrooms}
+  //       bathrooms={property.bathrooms}
+  //       propertyArea={property.propertyArea}
+  //       postDate={property.postDate}
+  //       phoneNumber={property.phoneNumber}
+  //     />
+  //   );
+  // });
+
+  // const [domLoaded, setDomLoaded] = useState(false);
+  // useEffect(() => {
+  //   setDomLoaded(true);
+  // }, []); //work around for hydration failed msg in bedroom number stack
   return (
     <div>
       <Meta title="Browse properties" />
       <Navigationbar />
       <br /> <br />
       <Container>
-        <Stack gap={4}>
-          <BrowsePropertyCard
-            image="pic1prop1.jpeg"
-            propertyType="Apartment"
-            priceInBhd="400"
-            description="Sea view apartment with many....slice method used to truim the string to 11 chars, so 2 lines on md screen. otherwise img does not fit card"
-            location="Abraj Al Lulu, Manama, Capital Governate"
-            bedrooms="8"
-            bathrooms="8"
-            propertyArea="736"
-            postDate="5/12/2022"
-            phoneNumber="97333344444"
-          />
-          {propertyCardElements}
-        </Stack>
+        <Stack gap={4}>{propertyDetails}</Stack>
       </Container>
     </div>
   );

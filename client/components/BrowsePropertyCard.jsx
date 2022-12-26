@@ -39,7 +39,7 @@ export default function BrowsePropertyCard(props) {
                 <Card.Subtitle className="text-muted">{props.propertyType}</Card.Subtitle>
                 <Card.Title>{props.priceInBhd} BHD</Card.Title>
                 <Card.Text>
-                  {props.description.slice(0, 115)}
+                  {props.description}
                 </Card.Text>
               </div>
 

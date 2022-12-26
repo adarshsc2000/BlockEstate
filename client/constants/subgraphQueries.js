@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 
-const GET_LISTED_PROPERTIES = gql`
+export const GET_LISTED_PROPERTIES = gql`
   {
     propertyForSales(where: { status: LISTED }) {
     id
@@ -16,7 +16,7 @@ const GET_LISTED_PROPERTIES = gql`
   }
 `;
 
-const GET_INTERESTED_PROPERTIES = gql`
+export const GET_INTERESTED_PROPERTIES = gql`
 {
   propertyForSales(where: { status: INTERESTED }) {
     id
@@ -34,8 +34,8 @@ const GET_INTERESTED_PROPERTIES = gql`
 
 export function getListedProperties() {
   const { loading, error, data: listedProperties } = useQuery(GET_LISTED_PROPERTIES);
-    if (loading) return "Loading...";
-    else if (error) return "Error..", error.message;
+    if (loading) return "loading";
+    else if (error) return "Error: " + error.message;
     else 
     {
       const propertiesOnSale = listedProperties.propertyForSales;
