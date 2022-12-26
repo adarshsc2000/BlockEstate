@@ -100,6 +100,10 @@ export class PropertyOwnershipTransfer__Params {
   get newTokenId(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
+
+  get tokenURI(): string {
+    return this._event.parameters[2].value.toString();
+  }
 }
 
 export class PropertyTransaction extends ethereum.Event {

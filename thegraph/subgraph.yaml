@@ -6,9 +6,9 @@ dataSources:
     name: BlockEstate
     network: goerli
     source:
-      address: "0xa86459a2a701aDED448c0130577712Ffb92Ae35b"
+      address: "0xD2780da81Eb289267c33f49e7975c24fC76C5FbA"
       abi: BlockEstate
-      startBlock: 8170567
+      startBlock: 8203908
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -16,7 +16,6 @@ dataSources:
       entities:
         - User
         - Property
-        - PropertyImage
         - PropertyForSale
         - Transaction
       abis:
@@ -33,7 +32,7 @@ dataSources:
           handler: handlePropertyVerified
         - event: PropertyTransaction(indexed address,indexed uint256,uint256)
           handler: handlePropertyTransaction
-        - event: PropertyOwnershipTransfer(uint256,uint256)
+        - event: PropertyOwnershipTransfer(uint256,uint256,string)
           handler: handlePropertyOwnershipTransfer
       file: ./src/block-estate.ts
   - kind: ethereum
@@ -50,7 +49,6 @@ dataSources:
       entities:
         - User
         - Property
-        - PropertyImage
         - PropertyForSale
         - Transaction
       abis:

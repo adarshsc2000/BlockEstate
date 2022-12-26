@@ -1,5 +1,3 @@
-import { Address } from "@graphprotocol/graph-ts";
-
 import {
     PropertyListed as PropertyListedEvent,
     PropertyCanceled as PropertyCanceledEvent,
@@ -26,9 +24,6 @@ export function handlePropertyListed(event: PropertyListedEvent): void {
     }
 
     propertyForSale.property = id;
-    propertyForSale.buyer = Address.fromString(
-        "0x0000000000000000000000000000000000000000"
-    );
 
     propertyForSale.price = event.params.price;
     propertyForSale.status = "LISTED";
@@ -40,9 +35,6 @@ export function handlePropertyCancelled(event: PropertyCanceledEvent): void {
     let id = event.params.tokenId.toHex();
     let propertyForSale = PropertyForSale.load(id)!;
 
-    propertyForSale.buyer = Address.fromString(
-        "0x000000000000000000000000000000000000dEaD"
-    );
     propertyForSale.status = "CANCELLED";
     propertyForSale.save();
 }
@@ -51,10 +43,19 @@ export function handlePropertyInterested(event: PropertyInterestedEvent): void {
     let id = event.params.tokenId.toHex();
     let propertyForSale = PropertyForSale.load(id)!;
 
-    propertyForSale.buyer = event.params.buyer;
+    let address = event.params.buyer;
+    let user = User.load(address);
+
+    if(!user)
+    {
+        user = new User(address);
+    }
+
+    propertyForSale.buyer = address;
     propertyForSale.status = "INTERESTED";
 
     propertyForSale.save();
+    user.save();
 }
 
 export function handlePropertyVerified(event: PropertyVerifiedEvent): void {
@@ -85,11 +86,24 @@ export function handlePropertyTransaction(event: PropertyTransactionEvent): void
 
 export function handlePropertyOwnershipTransfer(event: PropertyOwnershipTransferEvent): void {
     let id = event.params.oldTokenId.toHex();
+    let oldProperty = Property.load(id)!;
     let propertyForSale = PropertyForSale.load(id)!
 
     propertyForSale.status = "COMPLETED";
+    oldProperty.status = "INACTIVE";
+    oldProperty.owner = null;
 
     propertyForSale.save();
+    oldProperty.save();
+
+    let newId = event.params.newTokenId;
+    let newProperty = new Property(newId.toHex());
+
+    newProperty.owner = propertyForSale.buyer;
+    newProperty.ipfsURL = event.params.tokenURI;
+    newProperty.status = "ACTIVE";
+
+    newProperty.save();
 }
     // entity.blockNumber = event.block.number;
     // entity.blockTimestamp = event.block.timestamp;

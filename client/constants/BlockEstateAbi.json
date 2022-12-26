@@ -77,7 +77,8 @@
     "name": "PropertyOwnershipTransfer",
     "inputs": [
       { "type": "uint256", "name": "oldTokenId", "indexed": false },
-      { "type": "uint256", "name": "newTokenId", "indexed": false }
+      { "type": "uint256", "name": "newTokenId", "indexed": false },
+      { "type": "string", "name": "tokenURI", "indexed": false }
     ]
   },
   {

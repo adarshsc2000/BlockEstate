@@ -1,4 +1,3 @@
-import { Address, log } from "@graphprotocol/graph-ts";
 import {
     PropertyExpired as PropertyExpiredEvent,
     PropertyMinted as PropertyMintedEvent,
@@ -7,8 +6,6 @@ import {
 import {
     User,
     Property,
-    PropertyForSale,
-    Transaction
 } from "../generated/schema";
 
 
@@ -18,9 +15,7 @@ export function handlePropertyExpired(event: PropertyExpiredEvent): void {
   let property = Property.load(id)!;
 
   property.status = "INACTIVE";
-  property.owner = Address.fromString(
-    "0x000000000000000000000000000000000000dEaD"
-);
+  property.owner = null;
 
   property.save();
 }
@@ -32,10 +27,18 @@ export function handlePropertyMinted(event: PropertyMintedEvent): void {
     let id = event.params.tokenId.toHex();
     let property = new Property(id);
 
-    property.owner = event.params.owner;
+    let address = event.params.owner;
+    let user = User.load(address);
+
+    if(!user)
+    {
+      user = new User(address);
+    }
+
+    property.owner = address;
     property.ipfsURL = tokenURI;
     property.status = "ACTIVE";
 
+    user.save();
     property.save();
-    // log.error("Data couldn't be retrieved from IPFS Network", []);
 }

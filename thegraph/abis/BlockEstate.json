@@ -140,6 +140,12 @@
                 "internalType": "uint256",
                 "name": "newTokenId",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "tokenURI",
+                "type": "string"
             }
         ],
         "name": "PropertyOwnershipTransfer",
