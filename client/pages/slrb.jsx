@@ -20,13 +20,13 @@ export default function notary(props) {
 
   return (
     <>
-      <Meta title="Notary Homepage" />
+      <Meta title="SLRB Homepage" />
       <Navigationbar />
       <br /> <br />
 
       <Container>
         <Row>
-          <Col><h2>Properties to be verified</h2></Col>
+          <Col><h2>Change Ownership</h2></Col>
         </Row>
 
         <Card border="primary">
@@ -70,7 +70,7 @@ export default function notary(props) {
             <Stack direction="horizontal">
               <Button className="ms-auto" variant="outline-primary" href={`https://wa.me/+${props.phoneNumber}`} target="_blank"><FiMessageCircle /> Text</Button>
 
-              <Button variant="primary" href={`maybe use <link> instead`}> Verify</Button>
+              <Button variant="primary" href={`maybe use <link> instead`}> Change Ownership</Button>
             </Stack>
           </Card.Footer>
         </Card>
