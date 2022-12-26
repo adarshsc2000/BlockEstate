@@ -12,13 +12,13 @@ import BlockEstateAbi from "../constants/BlockEstateAbi.json";
 import networkMapping from "../constants/networkMapping.json";
 import { useState, useEffect } from "react";
 
-              {/* <Nav className="me-auto">
-                <Nav.Link href="/browse">Browse</Nav.Link>
-              </Nav> */}
-              <Nav className='ms-auto'>
-                <Nav.Link href="/whitepaper">White Paper</Nav.Link>
-                <ConnectButton className="d-none d-md-block" />
-              </Nav>
+//  <Nav className="me-auto">
+//     <Nav.Link href="/browse">Browse</Nav.Link>
+//   </Nav>
+// <Nav className='ms-auto'>
+//   <Nav.Link href="/whitepaper">White Paper</Nav.Link>
+//   <ConnectButton className="d-none d-md-block" />
+// </Nav>
 
 function Navigationbar() {
   const { isWeb3Enabled, chainId, account } = useMoralis();
@@ -27,12 +27,12 @@ function Navigationbar() {
 
   const [regularUserFlag, setRegularUserFlag] = useState(false);
 
-async function isRegularUser() {
+  async function isRegularUser() {
     if (isWeb3Enabled) {
       runContractFunction({
         params: {
           abi: BlockEstateAbi,
-          contractAddress: networkMapping[chainString]["BlockEstate"][0],
+          contractAddress: networkMapping[chainString]["BlockEstate"],
           functionName: "isRegularUser",
           params: {},
         },
