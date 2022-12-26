@@ -17,12 +17,12 @@ export default function Home() {
         width: "100vw",
         height: "100vh"
       }}>
-        <Image 
+        {/* <Image 
           src="/assets/landingpage.jpg"
           alt="Mountains with snow"
           layout="fill"
           objectFit='cover'
-        />
+        /> */}
       </div>
       <Landing />
     </>
