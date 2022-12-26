@@ -14,20 +14,18 @@ import BrowsePropertyCard from "../../components/BrowsePropertyCard.jsx";
 import properties from "../../properties.js";
 
 // graph
-import { useQuery } from "@apollo/client";
-import GET_ACTIVE_PROPERTIES from "../../constants/subgraphQueries";
+import { getListedProperties, getPropertiesToVerify } from "../../constants/subgraphQueries";
 
 //import {isWeb3Enabled} from useMoralis;
 
 export default function browse(props) {
   
   // graph test
-  const { loading, error, data: listedProperties } = useQuery(GET_ACTIVE_PROPERTIES);
-  loading || !listedProperties
-    ? console.log("Loading...")
-    : listedProperties.activeProperties.map((property) => console.log(property));
+  console.log(getListedProperties());
+  console.log(getPropertiesToVerify());
   // end graph test
 
+  
   /*   const [provider, setProvider] = useState({})
 
     useEffect(() => {

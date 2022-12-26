@@ -9,7 +9,7 @@ import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: "https://api.studio.thegraph.com/query/39497/blockestate/v0.0.1.1"
+  uri: "https://api.studio.thegraph.com/query/39497/blockestate/v0.0.3"
 })
 
 function MyApp({ Component, pageProps }) {
