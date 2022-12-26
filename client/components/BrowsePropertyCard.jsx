@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { Container } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
 import Stack from 'react-bootstrap/Stack';
 import { FaMapMarkerAlt } from "react-icons/fa";

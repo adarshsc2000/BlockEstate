@@ -20,6 +20,7 @@ import GET_ACTIVE_PROPERTIES from "../../constants/subgraphQueries";
 //import {isWeb3Enabled} from useMoralis;
 
 export default function browse(props) {
+  
   // graph test
   const { loading, error, data: listedProperties } = useQuery(GET_ACTIVE_PROPERTIES);
   loading || !listedProperties
@@ -64,7 +65,6 @@ export default function browse(props) {
   useEffect(() => {
     setDomLoaded(true);
   }, []); //work around for hydration failed msg in bedroom number stack
-
   return (
     <div>
       <Meta title="Browse properties" />
@@ -84,7 +84,6 @@ export default function browse(props) {
             postDate="5/12/2022"
             phoneNumber="97333344444"
           />
-
           {propertyCardElements}
         </Stack>
       </Container>

@@ -1,104 +1,41 @@
+import { Address, log } from "@graphprotocol/graph-ts";
 import {
-  Approval as ApprovalEvent,
-  ApprovalForAll as ApprovalForAllEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
-  PropertyExpired as PropertyExpiredEvent,
-  PropertyMinted as PropertyMintedEvent,
-  Transfer as TransferEvent
-} from "../generated/PropertyNFT/PropertyNFT"
+    PropertyExpired as PropertyExpiredEvent,
+    PropertyMinted as PropertyMintedEvent,
+    PropertyNFT
+} from "../generated/PropertyNFT/PropertyNFT";
 import {
-  Approval,
-  ApprovalForAll,
-  OwnershipTransferred,
-  PropertyExpired,
-  PropertyMinted,
-  Transfer
-} from "../generated/schema"
+    User,
+    Property,
+    PropertyForSale,
+    Transaction
+} from "../generated/schema";
 
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
-  entity.tokenId = event.params.tokenId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  let entity = new ApprovalForAll(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.operator = event.params.operator
-  entity.approved = event.params.approved
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
 
 export function handlePropertyExpired(event: PropertyExpiredEvent): void {
-  let entity = new PropertyExpired(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.tokenId = event.params.tokenId
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let id = event.params.tokenId.toHex();
+  let property = Property.load(id)!;
 
-  entity.save()
+  property.status = "INACTIVE";
+  property.owner = Address.fromString(
+    "0x000000000000000000000000000000000000dEaD"
+);
+
+  property.save();
 }
 
 export function handlePropertyMinted(event: PropertyMintedEvent): void {
-  let entity = new PropertyMinted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.tokenId = event.params.tokenId
-  entity.owner = event.params.owner
+    let propertyNFTContract = PropertyNFT.bind(event.address);
+    let tokenURI = propertyNFTContract.tokenURI(event.params.tokenId);
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+    let id = event.params.tokenId.toHex();
+    let property = new Property(id);
 
-  entity.save()
-}
+    property.owner = event.params.owner;
+    property.ipfsURL = tokenURI;
+    property.status = "ACTIVE";
 
-export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.tokenId = event.params.tokenId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+    property.save();
+    // log.error("Data couldn't be retrieved from IPFS Network", []);
 }
