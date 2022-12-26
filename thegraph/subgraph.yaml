@@ -8,28 +8,33 @@ dataSources:
     source:
       address: "0xa86459a2a701aDED448c0130577712Ffb92Ae35b"
       abi: BlockEstate
-      startBlock: 8127187
+      startBlock: 8170567
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ContractPropertyCanceled
-        - PropertyInterested
-        - ContractPropertyListed
-        - PropertyOwnershipTransfer
-        - PropertyTransaction
-        - PropertyVerified
+        - User
+        - Property
+        - PropertyImage
+        - PropertyForSale
+        - Transaction
       abis:
         - name: BlockEstate
           file: ./abis/BlockEstate.json
       eventHandlers:
-        - event: PropertyBought(indexed address,indexed address,indexed uint256,uint256)
-          handler: handlePropertyBought
-        - event: PropertyCanceled(indexed address,indexed address,indexed uint256)
-          handler: handlePropertyCanceled
-        - event: PropertyListed(indexed address,indexed address,indexed uint256,uint256)
+        - event: PropertyListed(indexed address,indexed uint256,uint256)
           handler: handlePropertyListed
+        - event: PropertyCanceled(indexed address,indexed uint256)
+          handler: handlePropertyCanceled
+        - event: PropertyInterested(indexed address,indexed uint256)
+          handler: handlePropertyInterested
+        - event: PropertyVerified(uint256)
+          handler: handlePropertyVerified
+        - event: PropertyTransaction(indexed address,indexed uint256,uint256)
+          handler: handlePropertyTransaction
+        - event: PropertyOwnershipTransfer(uint256,uint256)
+          handler: handlePropertyOwnershipTransfer
       file: ./src/block-estate.ts
   - kind: ethereum
     name: PropertyNFT
@@ -37,31 +42,23 @@ dataSources:
     source:
       address: "0x4e9Ff08d1d2832F4F614Afbc75CdF5C47b674C35"
       abi: PropertyNFT
+      startBlock: 8170108
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - OwnershipTransferred
-        - PropertyExpired
-        - PropertyMinted
-        - Transfer
+        - User
+        - Property
+        - PropertyImage
+        - PropertyForSale
+        - Transaction
       abis:
         - name: PropertyNFT
           file: ./abis/PropertyNFT.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: PropertyExpired(uint256)
           handler: handlePropertyExpired
         - event: PropertyMinted(uint256,address)
           handler: handlePropertyMinted
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
       file: ./src/property-nft.ts
