@@ -63,7 +63,7 @@ function Navigationbar() {
               {regularUserFlag && (
                 <>
                   <Nav.Link href="/browse">Browse</Nav.Link>
-                  <Nav.Link href="#">Profile</Nav.Link>
+                  <Nav.Link href="/notification">Notification</Nav.Link>
                 </>
               )}
               <Nav.Link href="/whitepaper">White Paper</Nav.Link>

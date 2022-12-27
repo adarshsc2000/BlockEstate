@@ -20,6 +20,7 @@ export default function notary(props) {
   }, []);
 
   const [show, setShow] = useState(0); //for alert
+  const [removedFromView, setRemovedFromView] = useState(false);
 
   useEffect(() => {
     if (show == 2) {
@@ -30,16 +31,16 @@ export default function notary(props) {
 
   return (
     <>
-      <Meta title="SLRB Homepage" />
+      <Meta title="Notifications" />
       <Navigationbar />
       <br /> <br />
 
       <Container>
 
         <Alert show={show} variant="success">
-          <Alert.Heading>SLRB title deed minting started</Alert.Heading>
+          <Alert.Heading>Property value paid</Alert.Heading>
           <p>
-            Please wait about 40 mins
+            Your notarized contract is ready to collect
           </p>
           <hr />
           <div className="d-flex justify-content-end">
@@ -50,7 +51,10 @@ export default function notary(props) {
         </Alert>
 
         <Row>
-          <Col><h2>Properties to be verified</h2></Col>
+          {!removedFromView &&
+            < Col > <h2>Pending payment</h2></Col>
+          }
+
         </Row>
 
         <Card border="primary">
@@ -94,18 +98,23 @@ export default function notary(props) {
           </Row>
           <Card.Footer>
             <Stack direction="horizontal">
-              <Button className="ms-auto" variant="outline-primary" href={`https://wa.me/+${props.phoneNumber}`} target="_blank"><FiMessageCircle /> Text</Button>
 
-              <Button variant="primary" onClick={() => setShow(1)}>
-                {show == 1 &&
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                } Change Ownership</Button>
+              {!removedFromView &&
+                <Button variant="primary" className="ms-auto" onClick={() => setShow(1)}>
+                  {show == 1 &&
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  } Pay</Button>
+              }
+              {
+                removedFromView &&
+                <Button className="ms-auto" variant="outline-primary" href={`enter ipfs link`} target="_blank"> IPFS link</Button>
+              }
             </Stack>
           </Card.Footer>
         </Card>

@@ -7,6 +7,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { BiBed, BiBath } from "react-icons/bi"
 import { FiMessageCircle } from "react-icons/fi"
 import { RxDimensions } from "react-icons/rx"
+
 import Link from 'next/link'
 
 export default function BrowsePropertyCard(props) {
@@ -14,10 +15,10 @@ export default function BrowsePropertyCard(props) {
   const currentDate = new Date(); //"now"
   const postDate = new Date();  // some date
   postDate.setDate(props.postDate.split('/')[0]);
-  postDate.setMonth(props.postDate.split('/')[1]-1);
+  postDate.setMonth(props.postDate.split('/')[1] - 1);
   postDate.setFullYear(props.postDate.split('/')[2]);
   const differenceInMillisecond = Math.abs(currentDate - postDate);  // difference in milliseconds
-  const daysPassed = Math.floor(differenceInMillisecond/ (1000 * 3600 * 24)); //days passed between date of posting and date of viewing
+  const daysPassed = Math.floor(differenceInMillisecond / (1000 * 3600 * 24)); //days passed between date of posting and date of viewing
 
 
   const [domLoaded, setDomLoaded] = useState(false);
@@ -56,7 +57,7 @@ export default function BrowsePropertyCard(props) {
                     </Stack>}
                 </Card.Text>
                 <Link href={`/browse/${encodeURIComponent(props.property_id)}`} >
-                <Button variant="outline-primary"  size="sm">More Information</Button>
+                  <Button variant="outline-primary" size="sm">More Information</Button>
                 </Link>
               </div>
             </Stack>
@@ -67,6 +68,8 @@ export default function BrowsePropertyCard(props) {
         <Stack direction="horizontal">
           <div>Listed {daysPassed} days ago </div>
           <Button className="ms-auto" variant="outline-primary" href={`https://wa.me/+${props.phoneNumber}`} target="_blank"><FiMessageCircle /> Text</Button>
+          <Button variant="primary" onClick={() => props.showFunc(true)}>Start Negotiation</Button>
+
         </Stack>
       </Card.Footer>
     </Card>
