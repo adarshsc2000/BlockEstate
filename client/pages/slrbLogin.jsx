@@ -28,10 +28,10 @@ export default function notaryLogin() {
     //check if email and password correct
     console.log(formData.Email, formData.Password)
     //we can hardcode the email and password like below if checking from DB takes too much time
-    if (formData.Email == "notary1@notary.blockestate" && formData.Password == "notary") {
+    if (formData.Email == "slrb1@slrb.blockestate" && formData.Password == "slrb") {
       console.log("login successful")
 
-      router.push("/notary")
+      router.push("/slrb")
     }
 
   }
@@ -40,7 +40,7 @@ export default function notaryLogin() {
     <div>
 
       <Navigationbar pageType="plain navbar" /> {/* uncomment when margin properties work for the form */}
-      <Meta title="Notary Login" />
+      <Meta title="SLRB Login" />
 
       <Container fluid>
         <Row className="my-auto">
