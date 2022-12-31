@@ -11,6 +11,7 @@ const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY || "";
 const NOTARY_PRIVATE_KEY = process.env.NOTARY_PRIVATE_KEY || "";
 const SLRB_PRIVATE_KEY = process.env.SLRB_PRIVATE_KEY || "";
 const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY || "";
+const USER2_PRIVATE_KEY = process.env.USER2_PRIVATE_KEY || "";
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "";
@@ -35,7 +36,8 @@ const config: HardhatUserConfig = {
                 ADMIN_PRIVATE_KEY,
                 NOTARY_PRIVATE_KEY,
                 SLRB_PRIVATE_KEY,
-                USER_PRIVATE_KEY
+                USER_PRIVATE_KEY,
+                USER2_PRIVATE_KEY
             ],
             chainId: 5
         }
@@ -85,6 +87,9 @@ const config: HardhatUserConfig = {
         },
         user: {
             default: 3
+        },
+        user2: {
+            default: 4
         }
     },
     solidity: {
