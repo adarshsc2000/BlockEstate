@@ -1,5 +1,6 @@
 import { ethers, network, getNamedAccounts } from "hardhat";
 import { moveBlocks } from "../utils/move-blocks";
+import { responses } from "../constants/ipfs";
 const { storeNFTs } = require("../utils/uploadToNftStorage");
 
 
@@ -9,14 +10,19 @@ async function mintAndListProperty() {
     const { slrb, user } = await getNamedAccounts();
     const propertyNft = await ethers.getContract("PropertyNFT", slrb);
     const blockEstate = await ethers.getContract("BlockEstate", user);
-    const responses = await storeNFTs("./assets/images/property-image-1.jpg");
+    // const responses = await storeNFTs("./assets/images/property-image-1.jpg");
     for (const response of responses) {
         console.log("Minting NFT...");
         const mintTx = await propertyNft.mintPropertyNFT(response.url, user, {
             value: ethers.utils.parseEther("0.002")
         });
         const mintTxReceipt = await mintTx.wait(1);
-        const tokenId = mintTxReceipt.events[1].args.tokenId;
+        console.log(
+            `Minted tokenId ${mintTxReceipt.events[0].args.tokenId.toString()} from contract: ${
+                propertyNft.address
+            }`
+        );
+        const tokenId = mintTxReceipt.events[0].args.tokenId;
         console.log("Listing NFT on BlockEstate...");
         const tx = await blockEstate.sellProperty(tokenId, PRICE);
         await tx.wait(1);
